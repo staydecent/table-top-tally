@@ -5,12 +5,23 @@ import java.util.List;
 
 public class GameCollection {
 
+    private List<Game> mGameList;
+
     public GameCollection() {
         super();
+        mGameList = load();
+    }
+
+    public Game get(int position) {
+        return mGameList.get(position);
+    }
+
+    public List<Game> all() {
+        return mGameList;
     }
 
     // TODO: Eventually this needs to be loaded from Realm
-    public List<Game> all() {
+    public List<Game> load() {
         List<Game> GameList = new ArrayList<Game>();
 
         Game Game1 = new Game("Carcassonne");
