@@ -1,17 +1,17 @@
 package apps.staydecent.com.tabletoptally;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     private GameCollection mGameCollection;
 
+    private GameAdapter mGameAdapter;
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
@@ -28,12 +30,16 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout mContent;
 
     @Bind(R.id.list_of_games)
-    RecyclerView listOfGames;
+    RecyclerView rvGames;
 
     @OnClick(R.id.fab)
-    public void sayHello() {
-        String text = getString(R.string.default_toast);
-        toast(text);
+    public void addGame() {
+        // TODO: Load up a fullscreen dialog for entering text
+        Game newGame = new Game("Some New Game");
+        mGameCollection.add(newGame);
+        mGameAdapter.notifyItemInserted(mGameCollection.size() - 1);
+        rvGames.scrollToPosition(mGameAdapter.getItemCount() - 1);
+        toast(getString(R.string.toast_new_game));
     }
 
     @Override
@@ -44,21 +50,21 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        listOfGames.setHasFixedSize(true);
+        rvGames.setHasFixedSize(true);
 
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        listOfGames.setLayoutManager(mLayoutManager);
+        rvGames.setLayoutManager(mLayoutManager);
 
         mGameCollection = new GameCollection();
-        GameAdapter mGameAdapter = new GameAdapter(mGameCollection.all());
-        listOfGames.setAdapter(mGameAdapter);
+        mGameAdapter = new GameAdapter(mGameCollection);
+        rvGames.setAdapter(mGameAdapter);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        listOfGames.addOnItemTouchListener(new RecyclerItemClickListener(this,
+        rvGames.addOnItemTouchListener(new RecyclerItemClickListener(this,
                 new OnGameClickListener()));
     }
 
@@ -84,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void toast(String text) {
-        Snackbar.make(mContent, text, Snackbar.LENGTH_LONG).show();
+    private void toast(CharSequence text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     private class OnGameClickListener extends RecyclerItemClickListener.SimpleOnItemClickListener {
@@ -95,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             Game mGame = mGameCollection.get(position);
             Resources res = getResources();
             String text = String.format(res.getString(R.string.game_click_tpl), mGame.getName());
-
             toast(text);
         }
 
