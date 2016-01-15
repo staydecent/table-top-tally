@@ -14,15 +14,15 @@ import butterknife.Bind;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
 
-    private List<Game> gameList;
+    private GameCollection mGameCollection;
 
-    public GameAdapter(List<Game> gameList) {
-        this.gameList = gameList;
+    public GameAdapter(GameCollection gameCollection) {
+        this.mGameCollection = gameCollection;
     }
 
     @Override
     public int getItemCount() {
-        return gameList.size();
+        return mGameCollection.size();
     }
 
     // Create new views (invoked by the layout manager)
@@ -35,7 +35,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
 
     @Override
     public void onBindViewHolder(GameViewHolder gameViewHolder, int position) {
-        Game game = gameList.get(position);
+        Game game = mGameCollection.get(position);
         gameViewHolder.name.setText(game.getName());
     }
 

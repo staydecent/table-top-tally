@@ -16,6 +16,14 @@ public class GameCollection {
         return mGameList.get(position);
     }
 
+    public void add(Game game) {
+        mGameList.add(game);
+    }
+
+    public int size() {
+        return mGameList.size();
+    }
+
     public List<Game> all() {
         return mGameList;
     }
@@ -42,7 +50,7 @@ public class GameCollection {
         Game Game6 = new Game("Chess");
         GameList.add(Game6);
 
-        Game Game7 = new Game("Boss Monstor");
+        Game Game7 = new Game("Boss Monster");
         GameList.add(Game7);
 
         Game Game8 = new Game("Bang");
