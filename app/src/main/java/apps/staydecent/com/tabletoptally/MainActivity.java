@@ -137,6 +137,27 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    private void buildAndShowDeleteDialog(final Game game) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+        builder.setTitle(String.format("Delete %s?", game.getName()));
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                toast(String.format("OK, deleting %s!", game.getName()));
+                asyncRemoveGame(game.getId());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        final AlertDialog dialog = builder.show();
+    }
+
     private void addGame(String gameName) {
         if (gameName == null || gameName.length() == 0) {
             toast("Empty games are no fun!");
@@ -191,9 +212,19 @@ public class MainActivity extends AppCompatActivity {
                         if (game == null || !game.isValid()) {
                             return;
                         }
-
                         toast(game.getName());
-                        //asyncRemoveGame(game.getId());
+                    }
+                });
+
+                cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        game = realmResults.get(vh.getAdapterPosition());
+                        if (game == null || !game.isValid()) {
+                            return false;
+                        }
+                        buildAndShowDeleteDialog(game);
+                        return true;
                     }
                 });
             }

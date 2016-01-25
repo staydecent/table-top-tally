@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:rrvLayoutType="LinearLayout"
-        app:rrvSwipeToDelete="true"
+        app:rrvSwipeToDelete="false"
         app:rrvEmptyLayoutId="@layout/game_empty_view"
         />
 </FrameLayout>
