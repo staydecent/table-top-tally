@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -161,9 +162,22 @@ public class MainActivity extends AppCompatActivity {
 
         public class ViewHolder extends RealmViewHolder {
             public TextView gameTextView;
+            public CardView cardView;
+
             public ViewHolder(FrameLayout container) {
                 super(container);
                 this.gameTextView = (TextView) container.findViewById(R.id.game_text_view);
+                this.cardView = (CardView) container.findViewById(R.id.game_list_item);
+                this.cardView.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       if (!game.isValid()) {
+                           return;
+                       }
+                       toast(game.getName());
+                       //asyncRemoveGame(game.getId());
+                   }
+               });
             }
         }
 
