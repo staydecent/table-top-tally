@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -160,33 +161,41 @@ public class MainActivity extends AppCompatActivity {
     public class GameRealmAdapter
             extends RealmBasedRecyclerViewAdapter<Game, GameRealmAdapter.ViewHolder> {
 
-        public class ViewHolder extends RealmViewHolder {
-            public TextView gameTextView;
-            public CardView cardView;
-
-            public ViewHolder(FrameLayout container) {
-                super(container);
-                this.gameTextView = (TextView) container.findViewById(R.id.game_text_view);
-                this.cardView = (CardView) container.findViewById(R.id.game_list_item);
-                this.cardView.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       if (!game.isValid()) {
-                           return;
-                       }
-                       toast(game.getName());
-                       //asyncRemoveGame(game.getId());
-                   }
-               });
-            }
-        }
-
         public GameRealmAdapter(
                 Context context,
                 RealmResults<Game> realmResults,
                 boolean automaticUpdate,
                 boolean animateResults) {
             super(context, realmResults, automaticUpdate, animateResults);
+        }
+
+        public class ViewHolder extends RealmViewHolder {
+            public TextView gameTextView;
+            public CardView cardView;
+            public Game game;
+
+            public ViewHolder(FrameLayout container) {
+                super(container);
+
+                final ViewHolder vh = this;
+
+                this.gameTextView = (TextView) container.findViewById(R.id.game_text_view);
+                this.cardView = (CardView) container.findViewById(R.id.game_list_item);
+
+                this.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        game = realmResults.get(vh.getAdapterPosition());
+                        if (game == null || !game.isValid()) {
+                            Log.d("WTF", String.format("WHATT %d", vh.getAdapterPosition()));
+                            return;
+                        }
+
+                        toast(game.getName());
+                        //asyncRemoveGame(game.getId());
+                    }
+                });
+            }
         }
 
         @Override
