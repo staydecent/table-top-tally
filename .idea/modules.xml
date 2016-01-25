@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TableTopTally.iml" filepath="$PROJECT_DIR$/TableTopTally.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/table-top-tally.iml" filepath="$PROJECT_DIR$/table-top-tally.iml" />
     </modules>
   </component>
 </project>
