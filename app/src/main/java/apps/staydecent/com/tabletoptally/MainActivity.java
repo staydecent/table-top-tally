@@ -151,10 +151,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetRealm() {
         RealmConfiguration realmConfig = new RealmConfiguration
-            .Builder(this)
-            .deleteRealmIfMigrationNeeded()
-            .build();
-        Realm.deleteRealm(realmConfig);
+                .Builder(this)
+                .deleteRealmIfMigrationNeeded()
+                .build();
     }
 
     public class GameRealmAdapter
