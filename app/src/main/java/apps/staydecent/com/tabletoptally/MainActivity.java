@@ -170,24 +170,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public class ViewHolder extends RealmViewHolder {
-            public TextView gameTextView;
-            public CardView cardView;
             public Game game;
+
+            @Bind(R.id.game_text_view)
+            TextView gameTextView;
+
+            @Bind(R.id.game_list_item)
+            CardView cardView;
 
             public ViewHolder(FrameLayout container) {
                 super(container);
+                ButterKnife.bind(this, container);
 
                 final ViewHolder vh = this;
 
-                this.gameTextView = (TextView) container.findViewById(R.id.game_text_view);
-                this.cardView = (CardView) container.findViewById(R.id.game_list_item);
-
-                this.cardView.setOnClickListener(new View.OnClickListener() {
+                cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         game = realmResults.get(vh.getAdapterPosition());
                         if (game == null || !game.isValid()) {
-                            Log.d("WTF", String.format("WHATT %d", vh.getAdapterPosition()));
                             return;
                         }
 
@@ -208,18 +209,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
             final Game game = realmResults.get(position);
-            viewHolder.gameTextView.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (!game.isValid()) {
-                                return;
-                            }
-                            toast(game.getName());
-                            //asyncRemoveGame(game.getId());
-                        }
-                    }
-            );
             viewHolder.gameTextView.setText(game.getName());
         }
     }
