@@ -2,7 +2,6 @@ package apps.staydecent.com.tabletoptally;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,9 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 
 import apps.staydecent.com.tabletoptally.models.Game;
 import apps.staydecent.com.tabletoptally.models.Score;
@@ -95,9 +101,24 @@ public class GameActivity extends AppCompatActivity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
         builder.setTitle("Who played this game?");
 
+        // Views
         LayoutInflater li = LayoutInflater.from(this);
         View dialogView = li.inflate(R.layout.score_players_dialog_view, null);
-        final EditText input = (EditText) dialogView.findViewById(R.id.input);
+        final AutoCompleteTextView input = (AutoCompleteTextView) dialogView.findViewById(R.id.input);
+
+        // Get AutoComplete options from Realm
+        RealmResults<Score> scores = realm
+                .where(Score.class)
+                .findAllSorted("id", Sort.ASCENDING);
+        ArrayList<String> playerNames = new ArrayList<>(0);
+        for (Score score : scores) {
+            playerNames.addAll(splitPlayersFromScore(score));
+        }
+
+        // Create the AutoCompleteTextView adapter
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(GameActivity.this, android.R.layout.simple_list_item_1, playerNames);
+        input.setAdapter(adapter);
 
         builder.setView(dialogView);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -120,7 +141,7 @@ public class GameActivity extends AppCompatActivity {
                         if (actionId == EditorInfo.IME_ACTION_DONE ||
                                 (event.getAction() == KeyEvent.ACTION_DOWN &&
                                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                            dialog.dismiss();
+                            Log.d("TTT", input.getText().toString());
                             return true;
                         }
                         return false;
@@ -133,6 +154,14 @@ public class GameActivity extends AppCompatActivity {
                 .Builder(this)
                 .deleteRealmIfMigrationNeeded()
                 .build();
+    }
+
+    private ArrayList<String> splitPlayersFromScore(Score score) {
+        Iterable<String> namesIterable = Splitter.on("; ")
+                .trimResults()
+                .omitEmptyStrings()
+                .split(score.getPlayers());
+        return Lists.newArrayList(namesIterable);
     }
 
     public class ScoreRealmAdapter

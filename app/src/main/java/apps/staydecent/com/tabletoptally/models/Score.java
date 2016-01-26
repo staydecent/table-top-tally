@@ -25,16 +25,12 @@ public class Score extends RealmObject {
         this.id = id;
     }
 
-    public Iterable<String> getPlayers() {
-        return Splitter.on(DELIM)
-                .trimResults()
-                .omitEmptyStrings()
-                .split(this.players);
+    public String getPlayers() {
+        return players;
     }
 
-    public void setPlayers(String[] players) {
-        Joiner joiner = Joiner.on(DELIM).skipNulls();
-        this.players = joiner.join(players);
+    public void setPlayers(String players) {
+        this.players = players;
     }
 
     public String getWinner() {
