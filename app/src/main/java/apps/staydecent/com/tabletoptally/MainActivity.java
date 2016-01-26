@@ -2,13 +2,13 @@ package apps.staydecent.com.tabletoptally;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -212,7 +212,9 @@ public class MainActivity extends AppCompatActivity {
                         if (game == null || !game.isValid()) {
                             return;
                         }
-                        toast(game.getName());
+                        Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                        intent.putExtra("game_id", game.getId());
+                        startActivity(intent);
                     }
                 });
 
@@ -233,8 +235,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
             View v = inflater.inflate(R.layout.game_item_view, viewGroup, false);
-            ViewHolder vh = new ViewHolder((FrameLayout) v);
-            return vh;
+            return new ViewHolder((FrameLayout) v);
         }
 
         @Override

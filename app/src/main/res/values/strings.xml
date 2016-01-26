@@ -4,4 +4,5 @@
     <string name="default_toast">This is the default toast message</string>
     <string name="game_click_tpl">You choose the Game, %1$s!</string>
     <string name="toast_new_game">Game Added</string>
+    <string name="title_activity_game">GameActivity</string>
 </resources>
