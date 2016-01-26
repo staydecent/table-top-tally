@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, GameActivity.class);
                         intent.putExtra("game_id", game.getId());
                         startActivity(intent);
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                     }
                 });
 
