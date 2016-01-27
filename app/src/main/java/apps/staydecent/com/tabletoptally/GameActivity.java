@@ -1,23 +1,23 @@
 package apps.staydecent.com.tabletoptally;
 
-import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.common.base.Joiner;
@@ -29,30 +29,27 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import apps.staydecent.com.tabletoptally.adapters.ScoreAdapter;
 import apps.staydecent.com.tabletoptally.models.Game;
 import apps.staydecent.com.tabletoptally.models.Score;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
-import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.realm.RealmViewHolder;
 import io.realm.Sort;
 
 public class GameActivity extends AppCompatActivity {
 
     private Realm realm;
     private Game game;
-    private RealmResults<Score> scores;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
     @Bind(R.id.scores_recycler_view)
-    RealmRecyclerView rvScores;
+    RecyclerView rvScores;
 
     @OnClick(R.id.fab)
     public void onFabClick() {
@@ -62,29 +59,34 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        long gameId = getIntent().getLongExtra("game_id", 0);
-
+        // Load data from Realm
         resetRealm();
+        long gameId = getIntent().getLongExtra("game_id", 0);
         realm = Realm.getInstance(this);
         game = realm
                 .where(Game.class)
                 .equalTo("id", gameId)
                 .findFirst();
 
-        scores = realm
+        RealmResults<Score> gameScores = realm
                 .where(Score.class)
+                .equalTo("game.id", gameId)
                 .findAllSorted("id", Sort.ASCENDING);
 
+        // Set toolbar title
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(game.getName());
 
-        ScoreRealmAdapter scoreRealmAdapter = new ScoreRealmAdapter(this, scores, true, true);
-        rvScores.setAdapter(scoreRealmAdapter);
+        // Setup RecyclerView
+        rvScores.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        rvScores.setLayoutManager(mLayoutManager);
+        ScoreAdapter scoreAdapter = new ScoreAdapter(gameScores);
+        rvScores.setAdapter(scoreAdapter);
     }
 
     @Override
@@ -241,71 +243,7 @@ public class GameActivity extends AppCompatActivity {
         score.setPlayers(Joiner.on(", ").join(players));
         score.setGame(game);
         realm.commitTransaction();
-        rvScores.smoothScrollToPosition(scores.size() - 1);
-    }
-
-    public class ScoreRealmAdapter
-            extends RealmBasedRecyclerViewAdapter<Score, ScoreRealmAdapter.ViewHolder> {
-
-        public ScoreRealmAdapter(
-                Context context,
-                RealmResults<Score> realmResults,
-                boolean automaticUpdate,
-                boolean animateResults) {
-            super(context, realmResults, automaticUpdate, animateResults);
-        }
-
-        public class ViewHolder extends RealmViewHolder {
-            public Score score;
-
-            @Bind(R.id.score_text_view)
-            TextView scoreTextView;
-
-            @Bind(R.id.score_list_item)
-            CardView scoreCardView;
-
-            public ViewHolder(FrameLayout container) {
-                super(container);
-                ButterKnife.bind(this, container);
-
-                final ViewHolder vh = this;
-
-                scoreCardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        score = realmResults.get(vh.getAdapterPosition());
-                        if (score == null || !score.isValid()) {
-                            return;
-                        }
-                    }
-                });
-
-                scoreCardView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        score = realmResults.get(vh.getAdapterPosition());
-                        if (score == null || !score.isValid()) {
-                            return false;
-                        }
-                        return true;
-                    }
-                });
-            }
-        }
-
-        @Override
-        public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
-            View v = inflater.inflate(R.layout.score_item_view, viewGroup, false);
-            return new ViewHolder((FrameLayout) v);
-        }
-
-        @Override
-        public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
-            final Score score = realmResults.get(position);
-            if (score != null) {
-                viewHolder.scoreTextView.setText(score.getWinner());
-            }
-        }
+//        rvScores.smoothScrollToPosition(scores.size() - 1);
     }
 
 }

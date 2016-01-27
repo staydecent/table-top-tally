@@ -30,7 +30,19 @@
                 android:layout_gravity="center_vertical"
                 android:padding="4dp"
                 android:textSize="32sp"
-                />
+                 />
+
+            <TextView
+                android:id="@+id/score_total_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentTop="false" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </FrameLayout>
