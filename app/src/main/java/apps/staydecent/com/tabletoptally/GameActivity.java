@@ -26,6 +26,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import apps.staydecent.com.tabletoptally.models.Game;
 import apps.staydecent.com.tabletoptally.models.Score;
@@ -118,6 +120,9 @@ public class GameActivity extends AppCompatActivity {
         for (Score score : scores) {
             existingNames.addAll(splitPlayersFromScore(score));
         }
+        // remove duplicate names
+        Set<String> namesSet = new LinkedHashSet<>(existingNames);
+        existingNames = new ArrayList<>(namesSet);
 
         // Store entered player names in list
         final ArrayList<String> playerNames = new ArrayList<>(0);
