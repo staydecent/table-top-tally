@@ -1,6 +1,5 @@
 package apps.staydecent.com.tabletoptally;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.common.base.Joiner;
@@ -44,7 +44,6 @@ public class GameActivity extends AppCompatActivity {
 
     private Realm realm;
     private Game game;
-    private Score score;
     private RealmResults<Score> scores;
 
     @Bind(R.id.toolbar)
@@ -115,20 +114,25 @@ public class GameActivity extends AppCompatActivity {
         RealmResults<Score> scores = realm
                 .where(Score.class)
                 .findAllSorted("id", Sort.ASCENDING);
-        ArrayList<String> playerNames = new ArrayList<>(0);
+        ArrayList<String> existingNames = new ArrayList<>(0);
         for (Score score : scores) {
-            playerNames.addAll(splitPlayersFromScore(score));
+            existingNames.addAll(splitPlayersFromScore(score));
         }
+
+        // Store entered player names in list
+        final ArrayList<String> playerNames = new ArrayList<>(0);
 
         // Create the AutoCompleteTextView adapter
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(GameActivity.this, android.R.layout.simple_list_item_1, playerNames);
+                new ArrayAdapter<>(GameActivity.this, android.R.layout.simple_list_item_1, existingNames);
         input.setAdapter(adapter);
 
         builder.setView(dialogView);
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                buildAndShowWinnerDialog(playerNames);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -143,16 +147,54 @@ public class GameActivity extends AppCompatActivity {
                 new EditText.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE ||
-                                (event.getAction() == KeyEvent.ACTION_DOWN &&
-                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                            joinTextViewString(tvNames, input.getText().toString());
+                        if (isInputDone(actionId, event)) {
+                            String newName = input.getText().toString();
+                            playerNames.add(newName);
+                            joinTextViewString(tvNames, newName);
                             input.setText("");
                             return true;
                         }
                         return false;
                     }
                 });
+    }
+
+    private void buildAndShowWinnerDialog(final ArrayList<String> playerNames) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+        builder.setTitle("Which player won!?");
+
+        // Views
+        LayoutInflater li = LayoutInflater.from(this);
+        View dialogView = li.inflate(R.layout.scores_winner_dialog_view, null);
+        final Spinner spinner = (Spinner) dialogView.findViewById(R.id.winner_spinner);
+
+        // Setup Spinner adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                GameActivity.this,
+                android.R.layout.simple_spinner_item,
+                playerNames);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+        // Input events
+        builder.setView(dialogView);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                addScore(game, playerNames, spinner.getSelectedItem().toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     private void resetRealm() {
@@ -178,6 +220,23 @@ public class GameActivity extends AppCompatActivity {
             String newStr = prevStr + ", " + str;
             tv.setText(newStr);
         }
+    }
+
+    private boolean isInputDone(int actionId, KeyEvent event) {
+        return (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event.getAction() == KeyEvent.ACTION_DOWN &&
+                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER));
+    }
+
+    private void addScore(Game game, ArrayList<String> players, String winner) {
+        realm.beginTransaction();
+        Score score = realm.createObject(Score.class);
+        score.setId(System.currentTimeMillis());
+        score.setWinner(winner);
+        score.setPlayers(Joiner.on(", ").join(players));
+        score.setGame(game);
+        realm.commitTransaction();
+        rvScores.smoothScrollToPosition(scores.size() - 1);
     }
 
     public class ScoreRealmAdapter
@@ -238,7 +297,9 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
             final Score score = realmResults.get(position);
-            viewHolder.scoreTextView.setText(score.getGame().getName());
+            if (score != null) {
+                viewHolder.scoreTextView.setText(score.getGame().getName());
+            }
         }
     }
 
