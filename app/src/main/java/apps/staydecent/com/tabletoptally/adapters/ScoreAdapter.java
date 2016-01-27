@@ -46,7 +46,8 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.GameViewHold
     public void onBindViewHolder(GameViewHolder gameViewHolder, int position) {
         String winner = uniqueWinners.get(position);
         gameViewHolder.text.setText(winner);
-        gameViewHolder.total.setText(getWinTotal(winner));
+        String total = String.format("%d/%d", getWinTotal(winner), getPlaysTotal(winner));
+        gameViewHolder.total.setText(total);
     }
 
     private ArrayList<String> getUniqueWinners() {
@@ -59,9 +60,12 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.GameViewHold
         return new ArrayList<>(winnersSet);
     }
 
-    private String getWinTotal(String playerName) {
-        long wins = gameScores.where().equalTo("winner", playerName).count();
-        return String.format("%d", wins);
+    private long getWinTotal(String playerName) {
+        return gameScores.where().equalTo("winner", playerName).count();
+    }
+
+    private long getPlaysTotal(String playerName) {
+        return gameScores.where().contains("players", playerName).count();
     }
 
     public static class GameViewHolder extends RecyclerView.ViewHolder {
