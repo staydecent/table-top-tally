@@ -6,13 +6,17 @@
     android:layout_height="wrap_content"
     android:padding="20dp">
 
+    <TextView
+        android:id="@+id/names"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:singleLine="true"
-        android:imeOptions="actionDone"
         android:hint="Player Names"
         android:inputType="textAutoComplete"
         />

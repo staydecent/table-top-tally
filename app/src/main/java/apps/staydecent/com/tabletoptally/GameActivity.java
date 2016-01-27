@@ -1,5 +1,6 @@
 package apps.staydecent.com.tabletoptally;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,7 +20,9 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -76,6 +79,7 @@ public class GameActivity extends AppCompatActivity {
                 .where(Score.class)
                 .findAllSorted("id", Sort.ASCENDING);
 
+        assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(game.getName());
 
         ScoreRealmAdapter scoreRealmAdapter = new ScoreRealmAdapter(this, scores, true, true);
@@ -105,6 +109,7 @@ public class GameActivity extends AppCompatActivity {
         LayoutInflater li = LayoutInflater.from(this);
         View dialogView = li.inflate(R.layout.score_players_dialog_view, null);
         final AutoCompleteTextView input = (AutoCompleteTextView) dialogView.findViewById(R.id.input);
+        final TextView tvNames = (TextView) dialogView.findViewById(R.id.names);
 
         // Get AutoComplete options from Realm
         RealmResults<Score> scores = realm
@@ -121,7 +126,7 @@ public class GameActivity extends AppCompatActivity {
         input.setAdapter(adapter);
 
         builder.setView(dialogView);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -141,7 +146,8 @@ public class GameActivity extends AppCompatActivity {
                         if (actionId == EditorInfo.IME_ACTION_DONE ||
                                 (event.getAction() == KeyEvent.ACTION_DOWN &&
                                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                            Log.d("TTT", input.getText().toString());
+                            joinTextViewString(tvNames, input.getText().toString());
+                            input.setText("");
                             return true;
                         }
                         return false;
@@ -162,6 +168,16 @@ public class GameActivity extends AppCompatActivity {
                 .omitEmptyStrings()
                 .split(score.getPlayers());
         return Lists.newArrayList(namesIterable);
+    }
+
+    private void joinTextViewString(TextView tv, String str) {
+        String prevStr = tv.getText().toString();
+        if (Strings.isNullOrEmpty(prevStr)) {
+            tv.setText(str);
+        } else {
+            String newStr = prevStr + ", " + str;
+            tv.setText(newStr);
+        }
     }
 
     public class ScoreRealmAdapter
