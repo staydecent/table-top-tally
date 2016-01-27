@@ -205,7 +205,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private ArrayList<String> splitPlayersFromScore(Score score) {
-        Iterable<String> namesIterable = Splitter.on("; ")
+        Iterable<String> namesIterable = Splitter.on(", ")
                 .trimResults()
                 .omitEmptyStrings()
                 .split(score.getPlayers());
@@ -298,7 +298,7 @@ public class GameActivity extends AppCompatActivity {
         public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
             final Score score = realmResults.get(position);
             if (score != null) {
-                viewHolder.scoreTextView.setText(score.getGame().getName());
+                viewHolder.scoreTextView.setText(score.getWinner());
             }
         }
     }
