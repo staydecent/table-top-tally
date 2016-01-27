@@ -20,16 +20,21 @@ import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.Score;
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
 
+    private Realm realm;
+    private long gameId;
     private RealmResults<Score> gameScores;
     private ArrayList<String> uniqueWinners;
 
-    public ScoreAdapter(RealmResults<Score> scores) {
-        this.gameScores = scores;
-        this.uniqueWinners = getUniqueWinners();
+    public ScoreAdapter(Realm realm, long gameId) {
+        this.gameId = gameId;
+        this.realm = realm;
+        loadData();
     }
 
     @Override
@@ -51,6 +56,19 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         scoreViewHolder.text.setText(winner);
         String total = String.format("%d/%d", getWinTotal(winner), getPlaysTotal(winner));
         scoreViewHolder.total.setText(total);
+    }
+
+    public void loadDataAndNotifyAdapter() {
+        loadData();
+        notifyDataSetChanged();
+    }
+
+    private void loadData() {
+        gameScores = realm
+                .where(Score.class)
+                .equalTo("game.id", gameId)
+                .findAllSorted("id", Sort.ASCENDING);
+        uniqueWinners = getUniqueWinners();
     }
 
     private ArrayList<String> getUniqueWinners() {

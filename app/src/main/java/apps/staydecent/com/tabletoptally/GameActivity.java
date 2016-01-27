@@ -1,7 +1,6 @@
 package apps.staydecent.com.tabletoptally;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,8 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.common.base.Joiner;
@@ -44,6 +41,7 @@ public class GameActivity extends AppCompatActivity {
 
     private Realm realm;
     private Game game;
+    private ScoreAdapter scoreAdapter;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -72,11 +70,6 @@ public class GameActivity extends AppCompatActivity {
                 .equalTo("id", gameId)
                 .findFirst();
 
-        RealmResults<Score> gameScores = realm
-                .where(Score.class)
-                .equalTo("game.id", gameId)
-                .findAllSorted("id", Sort.ASCENDING);
-
         // Set toolbar title
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(game.getName());
@@ -85,7 +78,7 @@ public class GameActivity extends AppCompatActivity {
         rvScores.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvScores.setLayoutManager(mLayoutManager);
-        ScoreAdapter scoreAdapter = new ScoreAdapter(gameScores);
+        scoreAdapter = new ScoreAdapter(realm, gameId);
         rvScores.setAdapter(scoreAdapter);
     }
 
@@ -243,7 +236,7 @@ public class GameActivity extends AppCompatActivity {
         score.setPlayers(Joiner.on(", ").join(players));
         score.setGame(game);
         realm.commitTransaction();
-//        rvScores.smoothScrollToPosition(scores.size() - 1);
+        scoreAdapter.loadDataAndNotifyAdapter();
     }
 
 }
