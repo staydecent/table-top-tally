@@ -131,6 +131,12 @@ public class GameActivity extends AppCompatActivity {
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // If text is currently entered (not submitted) save it
+                String newName = input.getText().toString();
+                if (!Strings.isNullOrEmpty(newName)) {
+                    playerNames.add(input.getText().toString());
+                }
+                // ... Then dismiss
                 dialog.dismiss();
                 buildAndShowWinnerDialog(playerNames);
             }
