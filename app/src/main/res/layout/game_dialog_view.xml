@@ -13,7 +13,7 @@
         android:layout_marginTop="10dp"
         android:singleLine="true"
         android:imeOptions="actionDone"
-        android:hint="Game Name"
+        android:hint="@string/hint_dialog_add_game"
         android:inputType="textCapWords"
         />
 </LinearLayout>

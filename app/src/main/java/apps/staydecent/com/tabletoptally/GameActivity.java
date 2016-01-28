@@ -100,7 +100,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void buildAndShowPlayersDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-        builder.setTitle("Who played this game?");
+        builder.setTitle(getResources().getString(R.string.title_dialog_players));
 
         // Views
         LayoutInflater li = LayoutInflater.from(this);
@@ -178,7 +178,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void buildAndShowWinnerDialog(final ArrayList<String> playerNames) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-        builder.setTitle("Which player won!?");
+        builder.setTitle(getResources().getString(R.string.title_dialog_winner));
 
         // Views
         LayoutInflater li = LayoutInflater.from(this);

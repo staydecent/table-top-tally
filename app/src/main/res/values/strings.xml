@@ -1,8 +1,20 @@
 <resources>
     <string name="app_name">Table Top Tally</string>
     <string name="action_settings">Settings</string>
-    <string name="default_toast">This is the default toast message</string>
-    <string name="game_click_tpl">You choose the Game, %1$s!</string>
-    <string name="toast_new_game">Game Added</string>
+
+    <!-- Activities-->
     <string name="title_activity_game">GameActivity</string>
+
+    <!-- Confirmations-->
+    <string name="confirm_delete_game_tpl">Delete %1$s?</string>
+
+    <!-- Dialogs-->
+    <string name="title_dialog_add_game">Add A Game</string>
+    <string name="hint_dialog_add_game">Game Name</string>
+
+    <string name="title_dialog_players">Who played this game?</string>
+    <string name="hint_dialog_players">Player Name</string>
+    <string name="btn_add_dialog_players">+</string>
+
+    <string name="title_dialog_winner">Which player won?</string>
 </resources>

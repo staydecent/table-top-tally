@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void buildAndShowInputDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Add A Game");
+        builder.setTitle(getResources().getString(R.string.title_dialog_add_game));
 
         LayoutInflater li = LayoutInflater.from(this);
         View dialogView = li.inflate(R.layout.game_dialog_view, null);
@@ -141,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
     private void buildAndShowDeleteDialog(final Game game) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-        builder.setTitle(String.format("Delete %s?", game.getName()));
+        String title = getResources().getString(R.string.confirm_delete_game_tpl);
+        builder.setTitle(String.format(title, game.getName()));
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
