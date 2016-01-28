@@ -19,4 +19,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- View specific-->
+
+    <style name="Heading">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
 </resources>

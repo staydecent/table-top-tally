@@ -13,5 +13,5 @@
         app:rrvLayoutType="LinearLayout"
         app:rrvSwipeToDelete="false"
         app:rrvEmptyLayoutId="@layout/game_empty_view"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimaryDark" />
 </FrameLayout>

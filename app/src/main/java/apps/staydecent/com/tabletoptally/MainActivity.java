@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import apps.staydecent.com.tabletoptally.models.Game;
 import apps.staydecent.com.tabletoptally.models.Score;
+import apps.staydecent.com.tabletoptally.views.LineDividerItemDecoration;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 .where(Game.class)
                 .findAllSorted("id", Sort.ASCENDING);
 
+        rvGames.addItemDecoration(new LineDividerItemDecoration(this));
         GameRealmAdapter gameRealmAdapter = new GameRealmAdapter(this, games, true, true);
         rvGames.setAdapter(gameRealmAdapter);
     }

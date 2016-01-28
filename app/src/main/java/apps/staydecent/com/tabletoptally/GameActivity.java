@@ -30,6 +30,7 @@ import java.util.Set;
 import apps.staydecent.com.tabletoptally.adapters.ScoreAdapter;
 import apps.staydecent.com.tabletoptally.models.Game;
 import apps.staydecent.com.tabletoptally.models.Score;
+import apps.staydecent.com.tabletoptally.views.LineDividerItemDecoration;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -79,6 +80,7 @@ public class GameActivity extends AppCompatActivity {
         rvScores.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvScores.setLayoutManager(mLayoutManager);
+        rvScores.addItemDecoration(new LineDividerItemDecoration(this));
         scoreAdapter = new ScoreAdapter(realm, gameId);
         rvScores.setAdapter(scoreAdapter);
     }
