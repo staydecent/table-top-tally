@@ -1,24 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.percent.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="20dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    >
 
     <TextView
         android:id="@+id/names"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp" />
 
     <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/input"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_below="@+id/names"
+        app:layout_widthPercent="70%"
         android:singleLine="true"
         android:hint="Player Names"
         android:inputType="textAutoComplete"
         />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/input"
+        android:layout_toEndOf="@+id/input"
+        android:layout_alignBottom="@+id/input"
+        app:layout_widthPercent="30%"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="#ffffff"
+        android:text="+"
+        />
+
+</android.support.percent.PercentRelativeLayout>

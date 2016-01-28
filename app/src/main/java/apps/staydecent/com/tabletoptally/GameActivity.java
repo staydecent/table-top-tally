@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -106,6 +107,7 @@ public class GameActivity extends AppCompatActivity {
         View dialogView = li.inflate(R.layout.score_players_dialog_view, null);
         final AutoCompleteTextView input = (AutoCompleteTextView) dialogView.findViewById(R.id.input);
         final TextView tvNames = (TextView) dialogView.findViewById(R.id.names);
+        final Button btnAdd = (Button) dialogView.findViewById(R.id.btn_add);
 
         // Get AutoComplete options from Realm
         RealmResults<Score> scores = realm
@@ -145,6 +147,15 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+            }
+        });
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String newName = input.getText().toString();
+                playerNames.add(newName);
+                joinTextViewString(tvNames, newName);
+                input.setText("");
             }
         });
 
