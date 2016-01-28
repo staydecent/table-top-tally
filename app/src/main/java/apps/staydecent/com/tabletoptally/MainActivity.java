@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import apps.staydecent.com.tabletoptally.models.Game;
+import apps.staydecent.com.tabletoptally.models.Score;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -257,11 +258,16 @@ public class MainActivity extends AppCompatActivity {
                 Realm instance = Realm.getInstance(MainActivity.this);
                 Game game =
                         instance.where(Game.class).equalTo("id", id).findFirst();
+
                 if (game != null) {
+                    RealmResults<Score> scores =
+                        instance.where(Score.class).equalTo("game.id", game.getId()).findAll();
                     instance.beginTransaction();
+                    scores.clear();
                     game.removeFromRealm();
                     instance.commitTransaction();
                 }
+
                 instance.close();
                 return null;
             }
