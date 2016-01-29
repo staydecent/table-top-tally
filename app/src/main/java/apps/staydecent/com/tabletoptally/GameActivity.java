@@ -88,7 +88,7 @@ public class GameActivity extends BaseActivity {
 
         // Views
         LayoutInflater li = LayoutInflater.from(this);
-        View dialogView = li.inflate(R.layout.score_players_dialog_view, null);
+        View dialogView = li.inflate(R.layout.dialog_score_players_add, null);
         final AutoCompleteTextView input = (AutoCompleteTextView) dialogView.findViewById(R.id.input);
         final TextView tvNames = (TextView) dialogView.findViewById(R.id.names);
         final Button btnAdd = (Button) dialogView.findViewById(R.id.btn_add);
@@ -166,7 +166,7 @@ public class GameActivity extends BaseActivity {
 
         // Views
         LayoutInflater li = LayoutInflater.from(this);
-        View dialogView = li.inflate(R.layout.scores_winner_dialog_view, null);
+        View dialogView = li.inflate(R.layout.dialog_score_winner_choose, null);
         final Spinner spinner = (Spinner) dialogView.findViewById(R.id.winner_spinner);
 
         // Setup Spinner adapter

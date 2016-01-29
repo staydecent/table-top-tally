@@ -70,7 +70,7 @@ public class MainActivity extends BaseActivity {
         builder.setTitle(getResources().getString(R.string.title_dialog_add_game));
 
         LayoutInflater li = LayoutInflater.from(this);
-        View dialogView = li.inflate(R.layout.game_dialog_view, null);
+        View dialogView = li.inflate(R.layout.dialog_game_add, null);
         final EditText input = (EditText) dialogView.findViewById(R.id.input);
 
         builder.setView(dialogView);
