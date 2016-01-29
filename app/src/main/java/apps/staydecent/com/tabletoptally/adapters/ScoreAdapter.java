@@ -144,7 +144,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
                                     context.getResources().getString(R.string.transition_name_player_name))
                     );
 
-                    ActivityCompat.startActivity(gameActivity, intent, options.toBundle());
+                    gameActivity.startActivity(intent, options.toBundle());
                 }
             });
         }
