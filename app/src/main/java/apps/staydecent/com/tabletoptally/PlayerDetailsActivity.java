@@ -14,7 +14,7 @@ public class PlayerDetailsActivity extends BaseActivity {
     private String playerName;
     private RealmResults<Score> scores; // scores where playerName is present
 
-    @Bind(R.id.DETAILS_name)
+    @Bind(R.id.details_player_name)
     TextView mName;
 
     @Override

@@ -2,6 +2,9 @@ package apps.staydecent.com.tabletoptally.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import apps.staydecent.com.tabletoptally.GameActivity;
 import apps.staydecent.com.tabletoptally.PlayerDetailsActivity;
 import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.Score;
@@ -112,13 +116,13 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         @Bind(R.id.score_list_item)
         CardView cardView;
 
-        @Bind(R.id.score_text_view)
+        @Bind(R.id.score_player_name)
         TextView text;
 
         @Bind(R.id.score_total_view)
         TextView total;
 
-        public ScoreViewHolder(View view) {
+        public ScoreViewHolder(final View view) {
             super(view);
             ButterKnife.bind(this, view);
 
@@ -131,7 +135,17 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
                     Log.d("TTT", String.format("HIYA %s", playerName));
                     Intent intent = new Intent(context, PlayerDetailsActivity.class);
                     intent.putExtra("playerName", playerName);
-                    context.startActivity(intent);
+
+                    GameActivity gameActivity = (GameActivity) context;
+
+
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            gameActivity,
+                            new Pair<View, String>(view.findViewById(R.id.score_player_name),
+                                    context.getResources().getString(R.string.transition_name_player_name))
+                    );
+
+                    ActivityCompat.startActivity(gameActivity, intent, options.toBundle());
                 }
             });
         }

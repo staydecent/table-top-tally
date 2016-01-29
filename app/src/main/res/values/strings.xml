@@ -17,4 +17,7 @@
     <string name="btn_add_dialog_players">+</string>
 
     <string name="title_dialog_winner">Which player won?</string>
+
+    <!-- Transitions -->
+    <string name="transition_name_player_name">transition:NAME</string>
 </resources>
