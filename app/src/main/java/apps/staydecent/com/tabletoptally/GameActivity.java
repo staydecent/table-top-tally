@@ -3,7 +3,6 @@ package apps.staydecent.com.tabletoptally;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -35,11 +34,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends BaseActivity {
 
     private Realm realm;
     private Game game;
@@ -64,7 +62,6 @@ public class GameActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Load data from Realm
-        resetRealm();
         long gameId = getIntent().getLongExtra("game_id", 0);
         realm = Realm.getInstance(this);
         game = realm
@@ -81,23 +78,8 @@ public class GameActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvScores.setLayoutManager(mLayoutManager);
         rvScores.addItemDecoration(new LineDividerItemDecoration(this));
-        scoreAdapter = new ScoreAdapter(realm, gameId);
+        scoreAdapter = new ScoreAdapter(this, realm, gameId);
         rvScores.setAdapter(scoreAdapter);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (realm != null) {
-            realm.close();
-            realm = null;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
 
     private void buildAndShowPlayersDialog() {
@@ -214,13 +196,6 @@ public class GameActivity extends AppCompatActivity {
         });
 
         builder.show();
-    }
-
-    private void resetRealm() {
-        RealmConfiguration realmConfig = new RealmConfiguration
-                .Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
     }
 
     private ArrayList<String> splitPlayersFromScore(Score score) {

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import apps.staydecent.com.tabletoptally.PlayerDetailsActivity;
 import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.Score;
 import butterknife.ButterKnife;
@@ -128,7 +129,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
                 public void onClick(View v) {
                     String playerName = uniqueWinners.get(vh.getAdapterPosition());
                     Log.d("TTT", String.format("HIYA %s", playerName));
-                    Intent intent = new Intent(context, PlaterDetailsActivity.class);
+                    Intent intent = new Intent(context, PlayerDetailsActivity.class);
                     intent.putExtra("playerName", playerName);
                     context.startActivity(intent);
                 }

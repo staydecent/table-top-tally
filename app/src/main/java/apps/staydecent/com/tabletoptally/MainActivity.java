@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -30,12 +27,11 @@ import butterknife.OnClick;
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
 import io.realm.RealmBasedRecyclerViewAdapter;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
 import io.realm.Sort;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private Realm realm;
     private RealmResults<Game> games;
@@ -59,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        resetRealm();
         realm = Realm.getInstance(this);
         games = realm
                 .where(Game.class)
@@ -68,37 +63,6 @@ public class MainActivity extends AppCompatActivity {
         rvGames.addItemDecoration(new LineDividerItemDecoration(this));
         GameRealmAdapter gameRealmAdapter = new GameRealmAdapter(this, games, true, true);
         rvGames.setAdapter(gameRealmAdapter);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (realm != null) {
-            realm.close();
-            realm = null;
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void buildAndShowInputDialog() {
@@ -174,13 +138,6 @@ public class MainActivity extends AppCompatActivity {
         game.setName(gameName);
         realm.commitTransaction();
         rvGames.smoothScrollToPosition(games.size() - 1);
-    }
-
-    private void resetRealm() {
-        RealmConfiguration realmConfig = new RealmConfiguration
-                .Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
     }
 
     public class GameRealmAdapter
