@@ -1,126 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorPrimaryDark">
+    android:fitsSystemWindows="true"
+    tools:context="apps.staydecent.com.tabletoptally.PlayerDetailsActivity">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/score_list_item"
-        android:layout_gravity="center"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="0sp"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        card_view:cardCornerRadius="0sp"
-        card_view:cardElevation="0sp"
-        card_view:cardPreventCornerOverlap="false"
-        card_view:cardUseCompatPadding="true"
-        card_view:contentPadding="18sp"
-        card_view:cardBackgroundColor="@color/colorPrimaryDark"
-        >
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            >
-
-            <TextView
-                android:id="@+id/details_player_name"
-                android:transitionName="@string/transition_name_player_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:padding="4dp"
-                style="@style/Heading"
-                />
-
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:orientation="vertical">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <RelativeLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:title="@string/title_player_details"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <TextView
-                android:id="@+id/DETAILS_phone_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Phone:"
-                android:textColor="#000"
-                android:textSize="20sp"/>
+    </android.support.design.widget.AppBarLayout>
 
-            <TextView
-                android:id="@+id/DETAILS_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/DETAILS_phone_label"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="+01 123456789"
-                android:textColor="#9f9f9f"
-                android:textSize="20sp"/>
+    <include layout="@layout/content_player_details" />
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
-
-            <TextView
-                android:id="@+id/DETAILS_email_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email:"
-                android:textColor="#000"
-                android:textSize="20sp"/>
-
-            <TextView
-                android:id="@+id/DETAILS_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/DETAILS_email_label"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="jonh.doe@example.com"
-                android:textColor="#9f9f9f"
-                android:textSize="20sp"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
-
-            <TextView
-                android:id="@+id/DETAILS_city_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="City:"
-                android:textColor="#000"
-                android:textSize="20sp"/>
-
-            <TextView
-                android:id="@+id/DETAILS_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/DETAILS_city_label"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="Rome"
-                android:textColor="#9f9f9f"
-                android:textSize="20sp"/>
-
-        </RelativeLayout>
-    </LinearLayout>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

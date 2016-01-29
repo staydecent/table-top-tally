@@ -1,6 +1,7 @@
 package apps.staydecent.com.tabletoptally;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import apps.staydecent.com.tabletoptally.models.Score;
@@ -17,11 +18,15 @@ public class PlayerDetailsActivity extends BaseActivity {
     @Bind(R.id.details_player_name)
     TextView mName;
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_details);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
 
         playerName = getIntent().getStringExtra("playerName");
         realm = Realm.getInstance(this);

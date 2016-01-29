@@ -4,6 +4,7 @@
 
     <!-- Activities-->
     <string name="title_activity_game">GameActivity</string>
+    <string name="title_player_details">Player Details</string>
 
     <!-- Confirmations-->
     <string name="confirm_delete_game_tpl">Delete %1$s?</string>
