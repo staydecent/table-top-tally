@@ -1,6 +1,10 @@
 package apps.staydecent.com.tabletoptally.adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +30,16 @@ import io.realm.Sort;
 
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
 
+    private Context context;
     private Realm realm;
     private long gameId;
     private RealmResults<Score> gameScores;
-    private ArrayList<String> uniqueWinners;
+    private ArrayList<String> uniqueWinners; // each of these represents a Score Card
 
-    public ScoreAdapter(Realm realm, long gameId) {
-        this.gameId = gameId;
+    public ScoreAdapter(Context context, Realm realm, long gameId) {
+        this.context = context;
         this.realm = realm;
+        this.gameId = gameId;
         loadData();
     }
 
@@ -100,15 +106,33 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         return gameScores.where().contains("players", playerName).count();
     }
 
-    public static class ScoreViewHolder extends RecyclerView.ViewHolder {
+    public class ScoreViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.score_list_item)
+        CardView cardView;
+
         @Bind(R.id.score_text_view)
         TextView text;
+
         @Bind(R.id.score_total_view)
         TextView total;
 
         public ScoreViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+
+            final RecyclerView.ViewHolder vh = this;
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String playerName = uniqueWinners.get(vh.getAdapterPosition());
+                    Log.d("TTT", String.format("HIYA %s", playerName));
+                    Intent intent = new Intent(context, PlaterDetailsActivity.class);
+                    intent.putExtra("playerName", playerName);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

@@ -1,14 +1,12 @@
 package apps.staydecent.com.tabletoptally;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import apps.staydecent.com.tabletoptally.adapters.ScoreAdapter;
-import apps.staydecent.com.tabletoptally.listeners.RecyclerItemClickListener;
 import apps.staydecent.com.tabletoptally.models.Game;
 import apps.staydecent.com.tabletoptally.models.Score;
 import apps.staydecent.com.tabletoptally.views.LineDividerItemDecoration;
@@ -86,13 +83,6 @@ public class GameActivity extends AppCompatActivity {
         rvScores.addItemDecoration(new LineDividerItemDecoration(this));
         scoreAdapter = new ScoreAdapter(realm, gameId);
         rvScores.setAdapter(scoreAdapter);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        rvScores.addOnItemTouchListener(new RecyclerItemClickListener(this,
-                new OnPlayerClickListener()));
     }
 
     @Override
@@ -268,12 +258,4 @@ public class GameActivity extends AppCompatActivity {
         scoreAdapter.loadDataAndNotifyAdapter();
     }
 
-    private class OnPlayerClickListener extends RecyclerItemClickListener.SimpleOnItemClickListener {
-
-        @Override
-        public void onItemClick(View childView, int position) {
-            Log.d("TTT", String.format("Click %d", position));
-        }
-
-    }
 }
