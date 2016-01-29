@@ -23,6 +23,7 @@
         android:singleLine="true"
         android:hint="@string/hint_dialog_players"
         android:inputType="textAutoComplete"
+        android:popupBackground="#fff"
         />
 
     <Button
