@@ -138,7 +138,6 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
 
                     GameActivity gameActivity = (GameActivity) context;
 
-
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             gameActivity,
                             new Pair<View, String>(view.findViewById(R.id.score_player_name),
