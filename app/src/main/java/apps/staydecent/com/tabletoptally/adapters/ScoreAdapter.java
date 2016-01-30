@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.google.common.collect.HashMultiset;
@@ -137,11 +138,18 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
                     intent.putExtra("playerName", playerName);
 
                     GameActivity gameActivity = (GameActivity) context;
+                    Window window = ((GameActivity) context).getWindow();
 
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             gameActivity,
+                            new Pair<View, String>(gameActivity.findViewById(android.R.id.statusBarBackground),
+                                    window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
+                            new Pair<View, String>(gameActivity.findViewById(android.R.id.navigationBarBackground),
+                                    window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME),
+                            new Pair<View, String>(gameActivity.findViewById(R.id.toolbar),
+                                    context.getResources().getString(R.string.transition_toolbar)),
                             new Pair<View, String>(view.findViewById(R.id.score_player_name),
-                                    context.getResources().getString(R.string.transition_name_player_name))
+                                    context.getResources().getString(R.string.transition_player_name))
                     );
 
                     gameActivity.startActivity(intent, options.toBundle());

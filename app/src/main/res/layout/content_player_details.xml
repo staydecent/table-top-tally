@@ -38,7 +38,7 @@
 
                 <TextView
                     android:id="@+id/details_player_name"
-                    android:transitionName="@string/transition_name_player_name"
+                    android:transitionName="@string/transition_player_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

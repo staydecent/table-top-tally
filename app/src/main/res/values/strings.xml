@@ -20,5 +20,6 @@
     <string name="title_dialog_winner">Which player won?</string>
 
     <!-- Transitions -->
-    <string name="transition_name_player_name">transition:NAME</string>
+    <string name="transition_toolbar">transition:TOOLBAR</string>
+    <string name="transition_player_name">transition:PLAYER_NAME</string>
 </resources>
