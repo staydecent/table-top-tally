@@ -22,6 +22,7 @@ import com.google.common.primitives.Ints;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import apps.staydecent.com.tabletoptally.GameActivity;
@@ -139,15 +140,13 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
 
                     GameActivity gameActivity = (GameActivity) context;
                     Window window = ((GameActivity) context).getWindow();
+                    View decor = window.getDecorView();
+                    View statusBar = decor.findViewById(android.R.id.statusBarBackground);
 
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             gameActivity,
-                            new Pair<View, String>(gameActivity.findViewById(android.R.id.statusBarBackground),
+                            new Pair<View, String>(statusBar,
                                     window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
-                            new Pair<View, String>(gameActivity.findViewById(android.R.id.navigationBarBackground),
-                                    window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME),
-                            new Pair<View, String>(gameActivity.findViewById(R.id.toolbar),
-                                    context.getResources().getString(R.string.transition_toolbar)),
                             new Pair<View, String>(view.findViewById(R.id.score_player_name),
                                     context.getResources().getString(R.string.transition_player_name))
                     );

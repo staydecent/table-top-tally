@@ -34,19 +34,11 @@ public class PlayerDetailsActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            postponeEnterTransition();
-            final View decor = getWindow().getDecorView();
-            decor.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-                @Override
-                public boolean onPreDraw() {
-                    decor.getViewTreeObserver().removeOnPreDrawListener(this);
-                    startPostponedEnterTransition();
-                    return true;
-                }
-            });
-        }
+        postponeTransitions();
+        excludeSystemUIFromTransitions();
+
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setTitle(R.string.title_player_details);
 
         playerName = getIntent().getStringExtra("playerName");
         realm = Realm.getInstance(this);
