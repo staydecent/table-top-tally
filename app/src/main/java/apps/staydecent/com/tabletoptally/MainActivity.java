@@ -3,8 +3,10 @@ package apps.staydecent.com.tabletoptally;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -18,9 +20,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import apps.staydecent.com.tabletoptally.models.Game;
 import apps.staydecent.com.tabletoptally.models.Score;
-import apps.staydecent.com.tabletoptally.views.LineDividerItemDecoration;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -60,7 +65,6 @@ public class MainActivity extends BaseActivity {
                 .where(Game.class)
                 .findAllSorted("id", Sort.ASCENDING);
 
-        rvGames.addItemDecoration(new LineDividerItemDecoration(this));
         GameRealmAdapter gameRealmAdapter = new GameRealmAdapter(this, games, true, true);
         rvGames.setAdapter(gameRealmAdapter);
     }
@@ -143,6 +147,14 @@ public class MainActivity extends BaseActivity {
     public class GameRealmAdapter
             extends RealmBasedRecyclerViewAdapter<Game, GameRealmAdapter.ViewHolder> {
 
+        public int colorIndex = 0;
+        public List<Integer> colors = Arrays.asList(
+                R.color.colorPrimaryDark,
+                R.color.colorPrimaryAlt1,
+                R.color.colorPrimaryAlt2,
+                R.color.colorPrimaryAlt3,
+                R.color.colorPrimaryAlt4);
+
         public GameRealmAdapter(
                 Context context,
                 RealmResults<Game> realmResults,
@@ -204,6 +216,17 @@ public class MainActivity extends BaseActivity {
         public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
             final Game game = realmResults.get(position);
             viewHolder.gameTextView.setText(game.getName());
+            viewHolder.cardView.setCardBackgroundColor(getNextColor());
+        }
+
+        private int getNextColor() {
+            if (colorIndex >= colors.size() - 1) {
+                colorIndex = 0;
+            } else {
+                colorIndex = colorIndex + 1;
+            }
+
+            return ContextCompat.getColor(getBaseContext(), colors.get(colorIndex));
         }
     }
 

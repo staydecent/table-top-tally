@@ -6,9 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorForeground">@color/colorPrimaryDark</item>
-        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:colorForeground">@android:color/background_dark</item>
+        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+        <item name="android:colorBackground">@android:color/background_light</item>
+        <item name="android:windowBackground">?android:attr/colorBackground</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -24,8 +25,16 @@
 
     <style name="Heading">
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="Heading.Inverted" parent="Heading">
+        <item name="android:fontFamily">sans-serif-bold</item>
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
 </resources>

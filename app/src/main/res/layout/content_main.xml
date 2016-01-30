@@ -10,8 +10,8 @@
         android:id="@+id/games_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="0sp"
         app:rrvLayoutType="LinearLayout"
         app:rrvSwipeToDelete="false"
-        app:rrvEmptyLayoutId="@layout/game_empty_view"
-        android:background="@color/colorPrimaryDark" />
+        app:rrvEmptyLayoutId="@layout/game_empty_view" />
 </FrameLayout>

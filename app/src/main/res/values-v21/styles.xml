@@ -4,7 +4,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -12,10 +11,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorForeground">@color/colorPrimaryDark</item>
-        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
-        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
-        <item name="android:statusBarColor">?android:attr/colorPrimary</item>
+        <item name="android:colorForeground">@android:color/background_dark</item>
+        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+        <item name="android:colorBackground">@android:color/background_light</item>
+        <item name="android:windowBackground">?android:attr/colorBackground</item>
 
         <!-- Meaningful transitions-->
 
@@ -28,8 +27,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="android:windowBackground">?android:attr/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@android:color/black</item>
 
     </style>
 </resources>
