@@ -32,6 +32,7 @@
             android:gravity="center"
             android:padding="4dp"
             style="@style/Heading.Inverted"
+            android:textColor="@color/text_state_list"
             android:text="This is some text" />
     </LinearLayout>
 </android.support.v7.widget.CardView>
