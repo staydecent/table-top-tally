@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import apps.staydecent.com.tabletoptally.R;
@@ -19,23 +18,29 @@ import butterknife.ButterKnife;
 
 public class GameFragment extends Fragment {
 
-    private static final String ARG_GAME_ID = "arg_game_id";
+    private static final String ARG_GAME = "arg_game_id";
     private static final String ARG_ALBUM_IMAGE_POSITION = "arg_album_image_position";
     private static final String ARG_STARTING_ALBUM_IMAGE_POSITION = "arg_starting_album_image_position";
 
     @Bind(R.id.game_text_view)
     TextView mGameText;
 
+    public static Game mGameModel;
+    public static int mColor;
+
     private int mStartingPosition;
     private int mGamePosition;
     private boolean mIsTransitioning;
     private long mBackgroundImageFadeMillis;
 
-    public static GameFragment newInstance(Game game, int position, int startingPosition) {
+    public static GameFragment newInstance(Game game, int color, int position, int startingPosition) {
+        mGameModel = game;
+        mColor = color;
+
         Bundle args = new Bundle();
-        args.putLong(ARG_GAME_ID, game_id);
         args.putInt(ARG_ALBUM_IMAGE_POSITION, position);
         args.putInt(ARG_STARTING_ALBUM_IMAGE_POSITION, startingPosition);
+
         GameFragment fragment = new GameFragment();
         fragment.setArguments(args);
         return fragment;
@@ -57,14 +62,15 @@ public class GameFragment extends Fragment {
 
         View textContainer = rootView.findViewById(R.id.game_text_container);
         TextView gameTitleText = (TextView) textContainer.findViewById(R.id.game_title);
-
-
+        String gameName = mGameModel.getName();
         gameTitleText.setText(gameName);
 
         String transitionName = String.format(
                 getResources().getString(R.string.tag_name_tpl),
                 mGamePosition);
         mGameText.setTransitionName(transitionName);
+        mGameText.setBackgroundColor(mColor);
+        mGameText.setText(gameName);
 
         startPostponedEnterTransition();
 

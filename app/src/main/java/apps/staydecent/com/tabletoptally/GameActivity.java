@@ -51,6 +51,7 @@ public class GameActivity extends Activity {
 
     private Realm realm;
     private Game game;
+    private int mColor;
     private ScoreAdapter scoreAdapter;
 
     private GameFragment mCurrentGameFragment;
@@ -86,7 +87,8 @@ public class GameActivity extends Activity {
                 .equalTo("id", gameId)
                 .findFirst();
 
-        Log.d("TTT", String.format("HELLO GAME ACTIVITY %s", game.getName()));
+
+        mColor = getIntent().getIntExtra("color", 0);
 
         pager.setAdapter(new GameFragmentPagerAdapter(getFragmentManager()));
         pager.setCurrentItem(mCurrentPosition);
@@ -266,7 +268,7 @@ public class GameActivity extends Activity {
 
         @Override
         public Fragment getItem(int position) {
-            return GameFragment.newInstance(game, position, mStartingPosition);
+            return GameFragment.newInstance(game, mColor, position, mStartingPosition);
         }
 
         @Override

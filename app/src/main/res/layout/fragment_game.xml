@@ -32,7 +32,7 @@
                 android:background="@drawable/solid_color_shape"
                 style="@style/Heading.Inverted"
                 android:textColor="@color/text_state_list"
-                android:text="This is some text" />
+                android:text="" />
         </FrameLayout>
 
         <LinearLayout
