@@ -6,7 +6,6 @@
     android:fitsSystemWindows="true"
     tools:context="apps.staydecent.com.tabletoptally.PlayerDetailsActivity">
 
-    <include layout="@layout/shared_toolbar" />
     <include layout="@layout/content_player_details" />
 
 </android.support.design.widget.CoordinatorLayout>

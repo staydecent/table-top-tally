@@ -24,9 +24,6 @@ public class PlayerDetailsActivity extends BaseActivity {
     @Bind(R.id.details_player_name)
     TextView mName;
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

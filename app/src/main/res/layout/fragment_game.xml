@@ -1,4 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,7 +12,7 @@
         <FrameLayout
             android:id="@+id/game_header_container"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="200sp"
             android:background="#000"
             android:transitionGroup="true">
 
@@ -51,18 +51,6 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Title"
                 android:textSize="40sp" />
 
-            <TextView
-                android:id="@+id/game_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="12dp"
-                android:lineSpacingMultiplier="1.2"
-                android:text="@string/lorem"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</FrameLayout>

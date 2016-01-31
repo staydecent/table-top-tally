@@ -95,6 +95,7 @@ public class GameActivity extends Activity {
         pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                Log.d("TTT", String.format("PAGER %d", position));
                 mCurrentPosition = position;
             }
         });
