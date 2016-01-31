@@ -32,13 +32,6 @@ public class PlayerDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_details);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-
-        postponeTransitions();
-        excludeSystemUIFromTransitions();
-
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(R.string.title_player_details);
 
         playerName = getIntent().getStringExtra("playerName");
         realm = Realm.getInstance(this);

@@ -1,20 +1,21 @@
 package apps.staydecent.com.tabletoptally;
 
-import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.SharedElementCallback;
 import android.content.DialogInterface;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
+import android.support.annotation.NonNull;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -30,42 +31,52 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import apps.staydecent.com.tabletoptally.adapters.ScoreAdapter;
+import apps.staydecent.com.tabletoptally.fragments.GameFragment;
 import apps.staydecent.com.tabletoptally.models.Game;
 import apps.staydecent.com.tabletoptally.models.Score;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class GameActivity extends BaseActivity {
+public class GameActivity extends Activity {
+
+   private static final String STATE_CURRENT_PAGE_POSITION = "state_current_page_position";
 
     private Realm realm;
     private Game game;
     private ScoreAdapter scoreAdapter;
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    private GameFragment mCurrentGameFragment;
+    private int mCurrentPosition;
+    private int mStartingPosition;
+    private boolean mIsReturning;
 
-    @Bind(R.id.scores_recycler_view)
-    RecyclerView rvScores;
-
-    @OnClick(R.id.fab)
-    public void onFabClick() {
-        buildAndShowPlayersDialog();
-    }
+    @Bind(R.id.pager)
+    ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        excludeSystemUIFromTransitions();
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        postponeEnterTransition();
+        setEnterSharedElementCallback(mCallback);
+
+        mStartingPosition = getIntent().getIntExtra(
+                getResources().getString(R.string.extra_starting_game_position), 0);
+        if (savedInstanceState == null) {
+            mCurrentPosition = mStartingPosition;
+        } else {
+            mCurrentPosition = savedInstanceState.getInt(
+                    getResources().getString(R.string.extra_current_game_position));
+        }
 
         // Load data from Realm
         long gameId = getIntent().getLongExtra("game_id", 0);
@@ -75,17 +86,62 @@ public class GameActivity extends BaseActivity {
                 .equalTo("id", gameId)
                 .findFirst();
 
-        // Set toolbar title
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(game.getName());
+        Log.d("TTT", String.format("HELLO GAME ACTIVITY %s", game.getName()));
 
-        // Setup RecyclerView
-        rvScores.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        rvScores.setLayoutManager(mLayoutManager);
-        scoreAdapter = new ScoreAdapter(this, realm, gameId);
-        rvScores.setAdapter(scoreAdapter);
+        pager.setAdapter(new GameFragmentPagerAdapter(getFragmentManager()));
+        pager.setCurrentItem(mCurrentPosition);
+        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                mCurrentPosition = position;
+            }
+        });
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_CURRENT_PAGE_POSITION, mCurrentPosition);
+    }
+
+    @Override
+    public void finishAfterTransition() {
+        mIsReturning = true;
+        Intent data = new Intent();
+        data.putExtra(
+                getResources().getString(R.string.extra_starting_game_position), mStartingPosition);
+        data.putExtra(
+                getResources().getString(R.string.extra_current_game_position), mCurrentPosition);
+        setResult(RESULT_OK, data);
+        super.finishAfterTransition();
+    }
+
+    private final SharedElementCallback mCallback = new SharedElementCallback() {
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            if (mIsReturning) {
+                TextView sharedElement = mCurrentGameFragment.getGameText();
+                if (sharedElement == null) {
+                    // If shared element is null, then it has been scrolled off screen and
+                    // no longer visible. In this case we cancel the shared element transition by
+                    // removing the shared element from the shared elements map.
+                    names.clear();
+                    sharedElements.clear();
+                } else if (mStartingPosition != mCurrentPosition) {
+                    // If the user has swiped to a different ViewPager page, then we need to
+                    // remove the old shared element and replace it with the new shared element
+                    // that should be transitioned instead.
+                    names.clear();
+                    names.add(sharedElement.getTransitionName());
+                    sharedElements.clear();
+                    sharedElements.put(sharedElement.getTransitionName(), sharedElement);
+                }
+            }
+        }
+    };
+
+
+    // --- Fragments and dialogs
 
     private void buildAndShowPlayersDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
@@ -202,6 +258,32 @@ public class GameActivity extends BaseActivity {
 
         builder.show();
     }
+
+    private class GameFragmentPagerAdapter extends FragmentStatePagerAdapter {
+        public GameFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return GameFragment.newInstance(game, position, mStartingPosition);
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            super.setPrimaryItem(container, position, object);
+            mCurrentGameFragment = (GameFragment) object;
+        }
+
+        @Override
+        public int getCount() {
+            return (int) realm
+                .where(Game.class)
+                .count();
+        }
+    }
+
+    // --- Helpers
 
     private ArrayList<String> splitPlayersFromScore(Score score) {
         Iterable<String> namesIterable = Splitter.on(", ")

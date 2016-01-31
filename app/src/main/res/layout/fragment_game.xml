@@ -1,0 +1,68 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/game_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/game_header_container"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="#000"
+            android:transitionGroup="true">
+
+            <ImageView
+                android:id="@+id/game_background_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:tint="@color/background_image_photo_tint"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/game_text_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:padding="4dp"
+                android:background="@drawable/solid_color_shape"
+                style="@style/Heading.Inverted"
+                android:textColor="@color/text_state_list"
+                android:text="This is some text" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/game_text_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:transitionGroup="true">
+
+            <TextView
+                android:id="@+id/game_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:fontFamily="sans-serif-light"
+                android:textAppearance="@android:style/TextAppearance.Material.Title"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/game_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="12dp"
+                android:lineSpacingMultiplier="1.2"
+                android:text="@string/lorem"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

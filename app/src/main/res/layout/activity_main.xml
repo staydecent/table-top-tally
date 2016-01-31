@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="0sp"
     android:padding="0sp"
-    android:fitsSystemWindows="true"
-    tools:context="apps.staydecent.com.tabletoptally.MainActivity">
+    android:clipToPadding="false"
+    tools:context=".MainActivity">
 
-    <include layout="@layout/shared_toolbar" />
     <include layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton

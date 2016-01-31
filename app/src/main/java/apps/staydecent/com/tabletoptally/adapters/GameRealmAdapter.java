@@ -1,5 +1,6 @@
 package apps.staydecent.com.tabletoptally.adapters;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -32,7 +34,6 @@ public class GameRealmAdapter
 
     private Context context;
 
-    public int colorIndex = 0;
     public List<Integer> colors = Arrays.asList(
             R.color.colorPrimaryDark,
             R.color.colorPrimaryAlt1,
@@ -49,52 +50,6 @@ public class GameRealmAdapter
         this.context = context;
     }
 
-    public class ViewHolder extends RealmViewHolder {
-        public Game game;
-
-        @Bind(R.id.game_text_view)
-        TextView gameTextView;
-
-        @Bind(R.id.game_list_item)
-        CardView cardView;
-
-        public ViewHolder(FrameLayout container) {
-            super(container);
-            ButterKnife.bind(this, container);
-
-            final ViewHolder vh = this;
-
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    game = realmResults.get(vh.getAdapterPosition());
-                    if (game == null || !game.isValid()) {
-                        return;
-                    }
-
-                    Intent intent = new Intent(context, GameActivity.class);
-                    intent.putExtra("game_id", game.getId());
-
-                    MainActivity mainActivity = (MainActivity) context;
-                    mainActivity.startActivity(intent);
-                    mainActivity.overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                }
-            });
-
-            cardView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    game = realmResults.get(vh.getAdapterPosition());
-                    if (game == null || !game.isValid()) {
-                        return false;
-                    }
-                    buildAndShowDeleteDialog(game);
-                    return true;
-                }
-            });
-        }
-    }
-
     @Override
     public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
         View v = inflater.inflate(R.layout.game_item_view, viewGroup, false);
@@ -104,8 +59,9 @@ public class GameRealmAdapter
     @Override
     public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
         final Game game = realmResults.get(position);
+        viewHolder.bind(position);
         viewHolder.gameTextView.setText(game.getName());
-        viewHolder.cardView.setCardBackgroundColor(getNextColor());
+        viewHolder.gameTextView.setBackgroundColor(getColorFromPosition(position));
     }
 
     private void buildAndShowDeleteDialog(final Game game) {
@@ -153,14 +109,93 @@ public class GameRealmAdapter
         remoteItem.execute();
     }
 
-    private int getNextColor() {
-        if (colorIndex >= colors.size() - 1) {
-            colorIndex = 0;
+    private int getColorFromPosition(int position) {
+        int index = 0;
+        int max = colors.size(); // 5
+
+        if (position < max) {
+            index = position;
         } else {
-            colorIndex = colorIndex + 1;
+            index = position - max;
+
+            // if position is >= max*2
+            if (index >= max) {
+                int factor = index / max;
+                index = index - (factor * max);
+            }
         }
 
-        return ContextCompat.getColor(context, colors.get(colorIndex));
+        return ContextCompat.getColor(context, colors.get(index));
     }
+
+
+    public class ViewHolder extends RealmViewHolder {
+        public Game game;
+
+        @Bind(R.id.game_text_view)
+        TextView gameTextView;
+
+        @Bind(R.id.game_list_card)
+        CardView cardView;
+
+        public ViewHolder(FrameLayout container) {
+            super(container);
+            ButterKnife.bind(this, container);
+
+            final ViewHolder vh = this;
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = vh.getAdapterPosition();
+
+                    game = realmResults.get(position);
+                    if (game == null || !game.isValid()) {
+                        return;
+                    }
+
+                    Intent intent = new Intent(context, GameActivity.class);
+                    intent.putExtra(context.getResources().getString(R.string.extra_starting_game_position), position);
+                    intent.putExtra("game_id", game.getId());
+                    intent.putExtra("color", getColorFromPosition(position));
+
+                    MainActivity mainActivity = (MainActivity) context;
+
+                    if (!mainActivity.isGameActivityStarted) {
+                        mainActivity.isGameActivityStarted = true;
+
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                                mainActivity,
+                                gameTextView,
+                                gameTextView.getTransitionName());
+
+                        Log.d("TTT", String.format("start GameActivity for %s", game.getName()));
+                        mainActivity.startActivity(intent, options.toBundle());
+                    }
+                }
+            });
+
+            cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    game = realmResults.get(vh.getAdapterPosition());
+                    if (game == null || !game.isValid()) {
+                        return false;
+                    }
+                    buildAndShowDeleteDialog(game);
+                    return true;
+                }
+            });
+        }
+
+        public void bind(int position) {
+            String tagName = String.format(
+                    context.getResources().getString(R.string.tag_name_tpl),
+                    position);
+            gameTextView.setTag(tagName);
+            gameTextView.setTransitionName(tagName);
+        }
+    }
+
 }
 

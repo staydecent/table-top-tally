@@ -15,19 +15,19 @@
         <item name="android:textColorPrimary">@android:color/primary_text_light</item>
         <item name="android:colorBackground">@android:color/background_light</item>
         <item name="android:windowBackground">?android:attr/colorBackground</item>
+        <item name="android:statusBarColor">@android:color/black</item>
 
         <!-- Meaningful transitions-->
 
         <item name="android:windowContentTransitions">true</item>
 
-        <item name="android:windowEnterTransition">@android:transition/slide_bottom</item>
-        <item name="android:windowExitTransition">@android:transition/slide_bottom</item>
+        <!--<item name="android:windowEnterTransition">@android:transition/slide_bottom</item>-->
+        <!--<item name="android:windowExitTransition">@android:transition/slide_bottom</item>-->
 
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
-        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
-        <item name="android:statusBarColor">@android:color/black</item>
+        <!--<item name="android:windowAllowEnterTransitionOverlap">true</item>-->
+        <!--<item name="android:windowAllowReturnTransitionOverlap">true</item>-->
+        <!--<item name="android:windowSharedElementEnterTransition">@android:transition/move</item>-->
+        <!--<item name="android:windowSharedElementExitTransition">@android:transition/move</item>-->
 
     </style>
 </resources>

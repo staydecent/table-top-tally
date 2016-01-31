@@ -7,4 +7,7 @@
     <color name="colorPrimaryAlt3">#F78145</color>
     <color name="colorPrimaryAlt4">#F24E4E</color>
     <color name="colorAccent">#4ee1c6</color>
+
+    <color name="background_image_photo_tint">#4f808080</color>
+    <color name="album_image_photo_tint">#2f505050</color>
 </resources>

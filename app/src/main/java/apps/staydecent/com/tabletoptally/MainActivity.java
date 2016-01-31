@@ -1,21 +1,25 @@
 package apps.staydecent.com.tabletoptally;
 
+import android.app.SharedElementCallback;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+import java.util.Map;
+
 import apps.staydecent.com.tabletoptally.adapters.GameRealmAdapter;
 import apps.staydecent.com.tabletoptally.models.Game;
-import apps.staydecent.com.tabletoptally.models.Score;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -28,25 +32,23 @@ public class MainActivity extends BaseActivity {
 
     private Realm realm;
     private RealmResults<Game> games;
+    private Bundle bundleReenterState;
+    public boolean isGameActivityStarted;
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    @Bind(R.id.games_recycler_view)
+    RealmRecyclerView mRecyclerView;
 
     @OnClick(R.id.fab)
     public void onFabClick() {
         buildAndShowInputDialog();
     }
 
-    @Bind(R.id.games_recycler_view)
-    RealmRecyclerView rvGames;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setExitSharedElementCallback(mCallback);
         ButterKnife.bind(this);
-
-        setSupportActionBar(toolbar);
 
         realm = Realm.getInstance(this);
         games = realm
@@ -54,7 +56,37 @@ public class MainActivity extends BaseActivity {
                 .findAllSorted("id", Sort.ASCENDING);
 
         GameRealmAdapter gameRealmAdapter = new GameRealmAdapter(this, games, true, true);
-        rvGames.setAdapter(gameRealmAdapter);
+        mRecyclerView.setAdapter(gameRealmAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isGameActivityStarted = false;
+        Log.d("TTT", "MainActivity onResume");
+    }
+
+    @Override
+    public void onActivityReenter(int requestCode, Intent data) {
+        Log.d("TTT", "MainActivity onActivityReenter");
+        super.onActivityReenter(requestCode, data);
+        bundleReenterState = new Bundle(data.getExtras());
+        int startingPosition = bundleReenterState.getInt(getResources().getString(R.string.extra_starting_game_position));
+        int currentPosition = bundleReenterState.getInt(getResources().getString(R.string.extra_current_game_position));
+        if (startingPosition != currentPosition) {
+            mRecyclerView.smoothScrollToPosition(currentPosition);
+        }
+        postponeEnterTransition();
+        mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                // TODO: figure out why it is necessary to request layout here in order to get a smooth transition.
+                mRecyclerView.requestLayout();
+                startPostponedEnterTransition();
+                return true;
+            }
+        });
     }
 
     private void buildAndShowInputDialog() {
@@ -107,11 +139,54 @@ public class MainActivity extends BaseActivity {
         game.setId(System.currentTimeMillis());
         game.setName(gameName);
         realm.commitTransaction();
-        rvGames.smoothScrollToPosition(games.size() - 1);
+        mRecyclerView.smoothScrollToPosition(games.size() - 1);
     }
 
     private void toast(CharSequence text) {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
+
+    private final SharedElementCallback mCallback = new SharedElementCallback() {
+
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            if (bundleReenterState != null) {
+                int startingPosition = bundleReenterState.getInt(getResources().getString(R.string.extra_starting_game_position));
+                int currentPosition = bundleReenterState.getInt(getResources().getString(R.string.extra_current_game_position));
+
+                Log.d("TTT", String.format("MainActivity Callback %d %d", startingPosition, currentPosition));
+
+                if (startingPosition != currentPosition) {
+                    // If startingPosition != currentPosition the user must have swiped to a
+                    // different page in the DetailsActivity. We must update the shared element
+                    // so that the correct one falls into place.
+                    String newTransitionName = String.format(
+                            getResources().getString(R.string.tag_name_tpl),
+                            currentPosition);
+                    View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
+                    if (newSharedElement != null) {
+                        names.clear();
+                        names.add(newTransitionName);
+                        sharedElements.clear();
+                        sharedElements.put(newTransitionName, newSharedElement);
+                    }
+                }
+
+                bundleReenterState = null;
+            } else {
+                // the activity is exiting.
+                View navigationBar = findViewById(android.R.id.navigationBarBackground);
+                View statusBar = findViewById(android.R.id.statusBarBackground);
+                if (navigationBar != null) {
+                    names.add(navigationBar.getTransitionName());
+                    sharedElements.put(navigationBar.getTransitionName(), navigationBar);
+                }
+                if (statusBar != null) {
+                    names.add(statusBar.getTransitionName());
+                    sharedElements.put(statusBar.getTransitionName(), statusBar);
+                }
+            }
+        }
+    };
 
 }
