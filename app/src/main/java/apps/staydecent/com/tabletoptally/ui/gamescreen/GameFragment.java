@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally.fragments;
+package apps.staydecent.com.tabletoptally.ui.gamescreen;
 
 import android.app.Fragment;
 import android.graphics.Rect;
@@ -12,7 +12,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import apps.staydecent.com.tabletoptally.R;
-import apps.staydecent.com.tabletoptally.models.Game;
+import apps.staydecent.com.tabletoptally.models.GameModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -25,7 +25,7 @@ public class GameFragment extends Fragment {
     @Bind(R.id.game_text_view)
     TextView mGameText;
 
-    public static Game mGameModel;
+    public static GameModel mGameModel;
     public static int mColor;
 
     private int mStartingPosition;
@@ -33,7 +33,7 @@ public class GameFragment extends Fragment {
     private boolean mIsTransitioning;
     private long mBackgroundImageFadeMillis;
 
-    public static GameFragment newInstance(Game game, int color, int position, int startingPosition) {
+    public static GameFragment newInstance(GameModel game, int color, int position, int startingPosition) {
         mGameModel = game;
         mColor = color;
 

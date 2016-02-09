@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally.adapters;
+package apps.staydecent.com.tabletoptally.ui.mainscreen;
 
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -17,11 +17,11 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
-import apps.staydecent.com.tabletoptally.GameActivity;
+import apps.staydecent.com.tabletoptally.ui.gamescreen.GameActivity;
 import apps.staydecent.com.tabletoptally.MainActivity;
 import apps.staydecent.com.tabletoptally.R;
-import apps.staydecent.com.tabletoptally.models.Game;
-import apps.staydecent.com.tabletoptally.models.Score;
+import apps.staydecent.com.tabletoptally.models.GameModel;
+import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -30,7 +30,7 @@ import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
 
 public class GameRealmAdapter
-        extends RealmBasedRecyclerViewAdapter<Game, GameRealmAdapter.ViewHolder> {
+        extends RealmBasedRecyclerViewAdapter<GameModel, GameRealmAdapter.ViewHolder> {
 
     private Context context;
 
@@ -43,7 +43,7 @@ public class GameRealmAdapter
 
     public GameRealmAdapter(
             Context context,
-            RealmResults<Game> realmResults,
+            RealmResults<GameModel> realmResults,
             boolean automaticUpdate,
             boolean animateResults) {
         super(context, realmResults, automaticUpdate, animateResults);
@@ -58,13 +58,13 @@ public class GameRealmAdapter
 
     @Override
     public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
-        final Game game = realmResults.get(position);
+        final GameModel game = realmResults.get(position);
         viewHolder.bind(position);
         viewHolder.gameTextView.setText(game.getName());
         viewHolder.gameTextView.setBackgroundColor(getColorFromPosition(position));
     }
 
-    private void buildAndShowDeleteDialog(final Game game) {
+    private void buildAndShowDeleteDialog(final GameModel game) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         String title = context.getResources().getString(R.string.confirm_delete_game_tpl);
         builder.setTitle(String.format(title, game.getName()));
@@ -90,12 +90,12 @@ public class GameRealmAdapter
             @Override
             protected Void doInBackground(Void... params) {
                 Realm instance = Realm.getInstance(context);
-                Game game =
-                        instance.where(Game.class).equalTo("id", id).findFirst();
+                GameModel game =
+                        instance.where(GameModel.class).equalTo("id", id).findFirst();
 
                 if (game != null) {
-                    RealmResults<Score> scores =
-                        instance.where(Score.class).equalTo("game.id", game.getId()).findAll();
+                    RealmResults<ScoreModel> scores =
+                        instance.where(ScoreModel.class).equalTo("game.id", game.getId()).findAll();
                     instance.beginTransaction();
                     scores.clear();
                     game.removeFromRealm();
@@ -130,7 +130,7 @@ public class GameRealmAdapter
 
 
     public class ViewHolder extends RealmViewHolder {
-        public Game game;
+        public GameModel game;
 
         @Bind(R.id.game_text_view)
         TextView gameTextView;

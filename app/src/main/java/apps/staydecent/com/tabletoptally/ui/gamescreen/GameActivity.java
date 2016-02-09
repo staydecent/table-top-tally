@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally;
+package apps.staydecent.com.tabletoptally.ui.gamescreen;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,10 +35,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import apps.staydecent.com.tabletoptally.adapters.ScoreAdapter;
-import apps.staydecent.com.tabletoptally.fragments.GameFragment;
-import apps.staydecent.com.tabletoptally.models.Game;
-import apps.staydecent.com.tabletoptally.models.Score;
+import apps.staydecent.com.tabletoptally.R;
+import apps.staydecent.com.tabletoptally.models.GameModel;
+import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -50,7 +49,7 @@ public class GameActivity extends Activity {
    private static final String STATE_CURRENT_PAGE_POSITION = "state_current_page_position";
 
     private Realm realm;
-    private Game game;
+    private GameModel game;
     private int mColor;
     private ScoreAdapter scoreAdapter;
 
@@ -83,7 +82,7 @@ public class GameActivity extends Activity {
         long gameId = getIntent().getLongExtra("game_id", 0);
         realm = Realm.getInstance(this);
         game = realm
-                .where(Game.class)
+                .where(GameModel.class)
                 .equalTo("id", gameId)
                 .findFirst();
 
@@ -158,11 +157,11 @@ public class GameActivity extends Activity {
         final Button btnAdd = (Button) dialogView.findViewById(R.id.btn_add);
 
         // Get AutoComplete options from Realm
-        RealmResults<Score> scores = realm
-                .where(Score.class)
+        RealmResults<ScoreModel> scores = realm
+                .where(ScoreModel.class)
                 .findAllSorted("id", Sort.ASCENDING);
         ArrayList<String> existingNames = new ArrayList<>(0);
-        for (Score score : scores) {
+        for (ScoreModel score : scores) {
             existingNames.addAll(splitPlayersFromScore(score));
         }
         // remove duplicate names
@@ -281,14 +280,14 @@ public class GameActivity extends Activity {
         @Override
         public int getCount() {
             return (int) realm
-                .where(Game.class)
+                .where(GameModel.class)
                 .count();
         }
     }
 
     // --- Helpers
 
-    private ArrayList<String> splitPlayersFromScore(Score score) {
+    private ArrayList<String> splitPlayersFromScore(ScoreModel score) {
         Iterable<String> namesIterable = Splitter.on(", ")
                 .trimResults()
                 .omitEmptyStrings()
@@ -312,9 +311,9 @@ public class GameActivity extends Activity {
                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER));
     }
 
-    private void addScore(Game game, ArrayList<String> players, String winner) {
+    private void addScore(GameModel game, ArrayList<String> players, String winner) {
         realm.beginTransaction();
-        Score score = realm.createObject(Score.class);
+        ScoreModel score = realm.createObject(ScoreModel.class);
         score.setId(System.currentTimeMillis());
         score.setWinner(winner);
         score.setPlayers(Joiner.on(", ").join(players));

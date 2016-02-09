@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally.views;
+package apps.staydecent.com.tabletoptally.ui.mainscreen;
 
 import android.content.Context;
 import android.graphics.Canvas;

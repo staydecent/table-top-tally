@@ -1,8 +1,7 @@
-package apps.staydecent.com.tabletoptally.adapters;
+package apps.staydecent.com.tabletoptally.ui.gamescreen;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
@@ -22,13 +21,11 @@ import com.google.common.primitives.Ints;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
-import apps.staydecent.com.tabletoptally.GameActivity;
-import apps.staydecent.com.tabletoptally.PlayerDetailsActivity;
+import apps.staydecent.com.tabletoptally.ui.playerscreen.PlayerDetailsActivity;
 import apps.staydecent.com.tabletoptally.R;
-import apps.staydecent.com.tabletoptally.models.Score;
+import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.ButterKnife;
 import butterknife.Bind;
 import io.realm.Realm;
@@ -40,7 +37,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     private Context context;
     private Realm realm;
     private long gameId;
-    private RealmResults<Score> gameScores;
+    private RealmResults<ScoreModel> gameScores;
     private ArrayList<String> uniqueWinners; // each of these represents a Score Card
 
     public ScoreAdapter(Context context, Realm realm, long gameId) {
@@ -78,7 +75,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
 
     private void loadData() {
         gameScores = realm
-                .where(Score.class)
+                .where(ScoreModel.class)
                 .equalTo("game.id", gameId)
                 .findAllSorted("id", Sort.ASCENDING);
         uniqueWinners = getUniqueWinners();
@@ -86,7 +83,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
 
     private ArrayList<String> getUniqueWinners() {
         ArrayList<String> allWinners = new ArrayList<>(gameScores.size());
-        for (Score score : gameScores) {
+        for (ScoreModel score : gameScores) {
             allWinners.add(score.getWinner());
         }
 

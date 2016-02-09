@@ -3,7 +3,7 @@ package apps.staydecent.com.tabletoptally.models;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Score extends RealmObject {
+public class ScoreModel extends RealmObject {
 
     @PrimaryKey
     private long id;
@@ -12,7 +12,7 @@ public class Score extends RealmObject {
 
     private String players;
     private String winner;
-    private Game game;
+    private GameModel game;
 
     public long getId() {
         return id;
@@ -38,11 +38,11 @@ public class Score extends RealmObject {
         this.winner = winner;
     }
 
-    public Game getGame() {
+    public GameModel getGame() {
         return game;
     }
 
-    public void setGame(Game game) {
+    public void setGame(GameModel game) {
         this.game = game;
     }
 }

@@ -4,13 +4,13 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Game extends RealmObject {
+public class GameModel extends RealmObject {
 
     @PrimaryKey
     private long id;
 
     private String name;
-    private RealmList<Score> scores;
+    private RealmList<ScoreModel> scores;
 
     public long getId() {
         return id;
@@ -28,11 +28,11 @@ public class Game extends RealmObject {
         this.name = name;
     }
 
-    public RealmList<Score> getScores() {
+    public RealmList<ScoreModel> getScores() {
         return scores;
     }
 
-    public void setScores(RealmList<Score> scores) {
+    public void setScores(RealmList<ScoreModel> scores) {
         this.scores = scores;
     }
 }

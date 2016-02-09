@@ -18,8 +18,9 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Map;
 
-import apps.staydecent.com.tabletoptally.adapters.GameRealmAdapter;
-import apps.staydecent.com.tabletoptally.models.Game;
+import apps.staydecent.com.tabletoptally.ui.BaseActivity;
+import apps.staydecent.com.tabletoptally.ui.mainscreen.GameRealmAdapter;
+import apps.staydecent.com.tabletoptally.models.GameModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,7 +32,7 @@ import io.realm.Sort;
 public class MainActivity extends BaseActivity {
 
     private Realm realm;
-    private RealmResults<Game> games;
+    private RealmResults<GameModel> games;
     private Bundle bundleReenterState;
     public boolean isGameActivityStarted;
 
@@ -52,7 +53,7 @@ public class MainActivity extends BaseActivity {
 
         realm = Realm.getInstance(this);
         games = realm
-                .where(Game.class)
+                .where(GameModel.class)
                 .findAllSorted("id", Sort.ASCENDING);
 
         GameRealmAdapter gameRealmAdapter = new GameRealmAdapter(this, games, true, true);
@@ -135,7 +136,7 @@ public class MainActivity extends BaseActivity {
         }
 
         realm.beginTransaction();
-        Game game = realm.createObject(Game.class);
+        GameModel game = realm.createObject(GameModel.class);
         game.setId(System.currentTimeMillis());
         game.setName(gameName);
         realm.commitTransaction();

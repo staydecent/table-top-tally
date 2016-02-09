@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally;
+package apps.staydecent.com.tabletoptally.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
