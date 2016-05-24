@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import apps.staydecent.com.tabletoptally.R;
+import apps.staydecent.com.tabletoptally.helpers.ColorHelper;
 import apps.staydecent.com.tabletoptally.models.GameModel;
 import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.Bind;
@@ -46,11 +47,13 @@ import io.realm.Sort;
 
 public class GameActivity extends Activity {
 
-   private static final String STATE_CURRENT_PAGE_POSITION = "state_current_page_position";
+    private static final String STATE_CURRENT_PAGE_POSITION = "state_current_page_position";
 
     private Realm realm;
+    private RealmResults<GameModel> games;
     private GameModel game;
     private int mColor;
+    private ColorHelper mColorHelper;
     private ScoreAdapter scoreAdapter;
 
     private GameFragment mCurrentGameFragment;
@@ -78,14 +81,20 @@ public class GameActivity extends Activity {
                     getResources().getString(R.string.extra_current_game_position));
         }
 
+        Log.d("TTT", String.format("mCurrentPosition %d", mCurrentPosition));
+
+        mColorHelper = new ColorHelper(this);
+
         // Load data from Realm
         long gameId = getIntent().getLongExtra("game_id", 0);
         realm = Realm.getInstance(this);
+        games = realm
+                .where(GameModel.class)
+                .findAllSorted("id", Sort.ASCENDING);
         game = realm
                 .where(GameModel.class)
                 .equalTo("id", gameId)
                 .findFirst();
-
 
         mColor = getIntent().getIntExtra("color", 0);
 
@@ -268,7 +277,13 @@ public class GameActivity extends Activity {
 
         @Override
         public Fragment getItem(int position) {
-            return GameFragment.newInstance(game, mColor, position, mStartingPosition);
+            Log.d("TTT", String.format("Fragment getItem %d", position));
+            GameModel offscreenGame = games.get(position);
+            if (offscreenGame == null || !offscreenGame.isValid()) {
+                offscreenGame = game;
+            }
+            int newColor = mColorHelper.getColorFromPosition(position);
+            return GameFragment.newInstance(offscreenGame, newColor, position, mStartingPosition);
         }
 
         @Override

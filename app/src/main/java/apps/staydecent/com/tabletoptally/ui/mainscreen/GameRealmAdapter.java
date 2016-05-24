@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -14,14 +13,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.util.Arrays;
-import java.util.List;
 
 import apps.staydecent.com.tabletoptally.ui.gamescreen.GameActivity;
 import apps.staydecent.com.tabletoptally.MainActivity;
 import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.GameModel;
 import apps.staydecent.com.tabletoptally.models.ScoreModel;
+import apps.staydecent.com.tabletoptally.helpers.ColorHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -33,13 +31,7 @@ public class GameRealmAdapter
         extends RealmBasedRecyclerViewAdapter<GameModel, GameRealmAdapter.ViewHolder> {
 
     private Context context;
-
-    public List<Integer> colors = Arrays.asList(
-            R.color.colorPrimaryDark,
-            R.color.colorPrimaryAlt1,
-            R.color.colorPrimaryAlt2,
-            R.color.colorPrimaryAlt3,
-            R.color.colorPrimaryAlt4);
+    private ColorHelper mColorHelper;
 
     public GameRealmAdapter(
             Context context,
@@ -48,6 +40,7 @@ public class GameRealmAdapter
             boolean animateResults) {
         super(context, realmResults, automaticUpdate, animateResults);
         this.context = context;
+        mColorHelper = new ColorHelper(context);
     }
 
     @Override
@@ -61,7 +54,7 @@ public class GameRealmAdapter
         final GameModel game = realmResults.get(position);
         viewHolder.bind(position);
         viewHolder.gameTextView.setText(game.getName());
-        viewHolder.gameTextView.setBackgroundColor(getColorFromPosition(position));
+        viewHolder.gameTextView.setBackgroundColor(mColorHelper.getColorFromPosition(position));
     }
 
     private void buildAndShowDeleteDialog(final GameModel game) {
@@ -109,26 +102,6 @@ public class GameRealmAdapter
         remoteItem.execute();
     }
 
-    private int getColorFromPosition(int position) {
-        int index = 0;
-        int max = colors.size(); // 5
-
-        if (position < max) {
-            index = position;
-        } else {
-            index = position - max;
-
-            // if position is >= max*2
-            if (index >= max) {
-                int factor = index / max;
-                index = index - (factor * max);
-            }
-        }
-
-        return ContextCompat.getColor(context, colors.get(index));
-    }
-
-
     public class ViewHolder extends RealmViewHolder {
         public GameModel game;
 
@@ -157,7 +130,7 @@ public class GameRealmAdapter
                     Intent intent = new Intent(context, GameActivity.class);
                     intent.putExtra(context.getResources().getString(R.string.extra_starting_game_position), position);
                     intent.putExtra("game_id", game.getId());
-                    intent.putExtra("color", getColorFromPosition(position));
+                    intent.putExtra("color", mColorHelper.getColorFromPosition(position));
 
                     MainActivity mainActivity = (MainActivity) context;
 
