@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally.ui.playerscreen;
+package apps.staydecent.com.tabletoptally.views.playerscreen;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally.ui.gamescreen;
+package apps.staydecent.com.tabletoptally.views.gamescreen;
 
 import android.app.Activity;
 import android.app.AlertDialog;

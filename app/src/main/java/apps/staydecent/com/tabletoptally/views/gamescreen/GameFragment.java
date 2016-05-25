@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally.ui.gamescreen;
+package apps.staydecent.com.tabletoptally.views.gamescreen;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -61,7 +61,6 @@ public class GameFragment extends Fragment {
         mStartingPosition = getArguments().getInt(ARG_STARTING_ALBUM_IMAGE_POSITION);
         mGamePosition = getArguments().getInt(ARG_ALBUM_IMAGE_POSITION);
         mColor = getArguments().getInt(ARG_COLOR);
-
         long gameId = getArguments().getLong(ARG_GAME_ID);
 
         Realm realm = Realm.getInstance(mContext);
@@ -76,19 +75,13 @@ public class GameFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_game, container, false);
         ButterKnife.bind(this, rootView);
 
-        View textContainer = rootView.findViewById(R.id.game_text_container);
-        TextView gameTitleText = (TextView) textContainer.findViewById(R.id.game_title);
-        String gameName = mGameModel.getName();
-        gameTitleText.setText(gameName);
-
-        Log.d("TTT", String.format("THIS VIEW %s %d", mGameModel.getName(), mGamePosition));
-
         String transitionName = String.format(
                 getResources().getString(R.string.tag_name_tpl),
                 mGamePosition);
+
         mGameText.setTransitionName(transitionName);
         mGameText.setBackgroundColor(mColor);
-        mGameText.setText(gameName);
+        mGameText.setText(mGameModel.getName());
 
         startPostponedEnterTransition();
 

@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally.ui.mainscreen;
+package apps.staydecent.com.tabletoptally.views.mainscreen;
 
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -14,8 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 
-import apps.staydecent.com.tabletoptally.ui.gamescreen.GameActivity;
-import apps.staydecent.com.tabletoptally.MainActivity;
+import apps.staydecent.com.tabletoptally.views.gamescreen.GameActivity;
 import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.GameModel;
 import apps.staydecent.com.tabletoptally.models.ScoreModel;

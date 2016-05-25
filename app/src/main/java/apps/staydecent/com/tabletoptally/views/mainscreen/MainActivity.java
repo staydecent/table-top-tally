@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally;
+package apps.staydecent.com.tabletoptally.views.mainscreen;
 
 import android.app.Activity;
 import android.app.SharedElementCallback;
@@ -19,7 +19,7 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Map;
 
-import apps.staydecent.com.tabletoptally.ui.mainscreen.GameRealmAdapter;
+import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.GameModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;

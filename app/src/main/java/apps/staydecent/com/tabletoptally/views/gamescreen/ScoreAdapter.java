@@ -1,4 +1,4 @@
-package apps.staydecent.com.tabletoptally.ui.gamescreen;
+package apps.staydecent.com.tabletoptally.views.gamescreen;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +23,8 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import apps.staydecent.com.tabletoptally.ui.playerscreen.PlayerDetailsActivity;
+import apps.staydecent.com.tabletoptally.helpers.ScoreHelper;
+import apps.staydecent.com.tabletoptally.views.playerscreen.PlayerDetailsActivity;
 import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.ButterKnife;
@@ -35,15 +36,12 @@ import io.realm.Sort;
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
 
     private Context context;
-    private Realm realm;
-    private long gameId;
-    private RealmResults<ScoreModel> gameScores;
+    private ScoreHelper scoreHelper;
     private ArrayList<String> uniqueWinners; // each of these represents a Score Card
 
-    public ScoreAdapter(Context context, Realm realm, long gameId) {
-        this.context = context;
-        this.realm = realm;
-        this.gameId = gameId;
+    public ScoreAdapter(Context c, long gameId) {
+        context = c;
+        scoreHelper = new ScoreHelper(gameId);
         loadData();
     }
 
@@ -64,7 +62,9 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     public void onBindViewHolder(ScoreViewHolder scoreViewHolder, int position) {
         String winner = uniqueWinners.get(position);
         scoreViewHolder.text.setText(winner);
-        String total = String.format("%d/%d", getWinTotal(winner), getPlaysTotal(winner));
+        String total = String.format("%d/%d",
+                scoreHelper.getWinTotal(winner),
+                scoreHelper.getPlaysTotal(winner));
         scoreViewHolder.total.setText(total);
     }
 
@@ -74,40 +74,8 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     }
 
     private void loadData() {
-        gameScores = realm
-                .where(ScoreModel.class)
-                .equalTo("game.id", gameId)
-                .findAllSorted("id", Sort.ASCENDING);
-        uniqueWinners = getUniqueWinners();
-    }
-
-    private ArrayList<String> getUniqueWinners() {
-        ArrayList<String> allWinners = new ArrayList<>(gameScores.size());
-        for (ScoreModel score : gameScores) {
-            allWinners.add(score.getWinner());
-        }
-
-        // Sort by frequency of occurrence
-        final Multiset<String> winnerCounts = HashMultiset.create(allWinners);
-        Ordering<String> byFrequency = new Ordering<String>() {
-            public int compare(String left, String right) {
-                return Ints.compare(winnerCounts.count(left), winnerCounts.count(right));
-            }
-        };
-        Collections.sort(allWinners, byFrequency.reverse());
-
-        // remove duplicate names (preserved ordering)
-        Set<String> winnersSet = new LinkedHashSet<>(allWinners);
-
-        return new ArrayList<>(winnersSet);
-    }
-
-    private long getWinTotal(String playerName) {
-        return gameScores.where().equalTo("winner", playerName).count();
-    }
-
-    private long getPlaysTotal(String playerName) {
-        return gameScores.where().contains("players", playerName).count();
+        scoreHelper.loadScores();
+        uniqueWinners = scoreHelper.getUniqueWinners();
     }
 
     public class ScoreViewHolder extends RecyclerView.ViewHolder {
