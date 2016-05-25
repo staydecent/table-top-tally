@@ -1,18 +1,19 @@
 package apps.staydecent.com.tabletoptally.ui.playerscreen;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.ScoreModel;
-import apps.staydecent.com.tabletoptally.ui.BaseActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class PlayerDetailsActivity extends BaseActivity {
+public class PlayerDetailsActivity extends Activity {
 
+    private Realm realm;
     private String playerName;
     private RealmResults<ScoreModel> scores; // scores where playerName is present
 
@@ -26,7 +27,7 @@ public class PlayerDetailsActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         playerName = getIntent().getStringExtra("playerName");
-        realm = Realm.getInstance(this);
+        realm = Realm.getDefaultInstance();
         scores = realm
                 .where(ScoreModel.class)
                 .contains("players", playerName)

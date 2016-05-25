@@ -1,5 +1,6 @@
 package apps.staydecent.com.tabletoptally;
 
+import android.app.Activity;
 import android.app.SharedElementCallback;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +19,6 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Map;
 
-import apps.staydecent.com.tabletoptally.ui.BaseActivity;
 import apps.staydecent.com.tabletoptally.ui.mainscreen.GameRealmAdapter;
 import apps.staydecent.com.tabletoptally.models.GameModel;
 import butterknife.Bind;
@@ -29,7 +29,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends Activity {
 
     private Realm realm;
     private RealmResults<GameModel> games;
@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity {
         setExitSharedElementCallback(mCallback);
         ButterKnife.bind(this);
 
-        realm = Realm.getInstance(this);
+        realm = Realm.getDefaultInstance();
         games = realm
                 .where(GameModel.class)
                 .findAllSorted("id", Sort.ASCENDING);
@@ -65,6 +65,16 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         isGameActivityStarted = false;
         Log.d("TTT", "MainActivity onResume");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (realm != null) {
+            Log.d("TTT", "onDestroy");
+            realm.close();
+            realm = null;
+        }
     }
 
     @Override
