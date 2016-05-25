@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +52,7 @@ public class GameActivity extends Activity {
     private Realm realm;
     private GameModel game;
     private ColorHelper mColorHelper;
-    private ScoreAdapter scoreAdapter;
+    private ScoreRealmAdapter scoreRealmAdapter;
 
     private GameFragment mCurrentGameFragment;
     private int mCurrentPosition;
@@ -90,14 +89,11 @@ public class GameActivity extends Activity {
                 .equalTo("id", gameId)
                 .findFirst();
 
-        Log.d("TTT", String.format("WITCHHHHH: %d - %s", mCurrentPosition, game.getName()));
-
         pager.setAdapter(new GameFragmentPagerAdapter(getFragmentManager(), this));
         pager.setCurrentItem(mCurrentPosition);
         pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                Log.d("TTT", String.format("PAGER %d", position));
                 mCurrentPosition = position;
             }
         });
@@ -344,7 +340,7 @@ public class GameActivity extends Activity {
         score.setPlayers(Joiner.on(", ").join(players));
         score.setGame(game);
         realm.commitTransaction();
-        scoreAdapter.loadDataAndNotifyAdapter();
+        scoreRealmAdapter.loadDataAndNotifyAdapter();
     }
 
 }

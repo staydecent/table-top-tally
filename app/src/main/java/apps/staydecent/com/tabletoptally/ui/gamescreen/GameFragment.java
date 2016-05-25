@@ -17,6 +17,7 @@ import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.models.GameModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
 
 public class GameFragment extends Fragment {
@@ -36,6 +37,9 @@ public class GameFragment extends Fragment {
 
     @Bind(R.id.game_text_view)
     TextView mGameText;
+
+    @Bind(R.id.scores_recycler_view)
+    RealmRecyclerView mRecyclerView;
 
     public static GameFragment newInstance(Context context, long gameId, int color, int position, int startingPosition) {
         // the same context is used for all fragments thus does not need to be an arg
@@ -69,6 +73,9 @@ public class GameFragment extends Fragment {
                 .where(GameModel.class)
                 .equalTo("id", gameId)
                 .findFirst();
+
+        ScoreRealmAdapter scoreRealmAdapter = new ScoreRealmAdapter(this, games, true, true);
+        mRecyclerView.setAdapter(scoreRealmAdapter);
     }
 
     @Override
