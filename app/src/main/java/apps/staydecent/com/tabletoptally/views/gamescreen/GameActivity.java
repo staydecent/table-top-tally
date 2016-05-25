@@ -42,6 +42,7 @@ import apps.staydecent.com.tabletoptally.models.GameModel;
 import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -51,7 +52,7 @@ public class GameActivity extends Activity {
     private static final String STATE_CURRENT_PAGE_POSITION = "state_current_page_position";
 
     private Realm realm;
-    private GameModel game;
+    private long mGameId;
     private ColorHelper mColorHelper;
     private ScoreAdapter scoreAdapter;
 
@@ -63,6 +64,11 @@ public class GameActivity extends Activity {
     @Bind(R.id.pager)
     ViewPager pager;
 
+    @OnClick(R.id.fab)
+    public void onFabClick() {
+        buildAndShowPlayersDialog();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +78,7 @@ public class GameActivity extends Activity {
         setEnterSharedElementCallback(mCallback);
 
         mColorHelper = new ColorHelper(this);
+        realm = Realm.getDefaultInstance();
 
         mStartingPosition = getIntent().getIntExtra(
                 getResources().getString(R.string.extra_starting_game_position), 0);
@@ -82,15 +89,7 @@ public class GameActivity extends Activity {
                     getResources().getString(R.string.extra_current_game_position));
         }
 
-        // Load data from Realm
-        long gameId = getIntent().getLongExtra("game_id", 0);
-        realm = Realm.getDefaultInstance();
-        game = realm
-                .where(GameModel.class)
-                .equalTo("id", gameId)
-                .findFirst();
-
-        Log.d("TTT", String.format("WITCHHHHH: %d - %s", mCurrentPosition, game.getName()));
+        mGameId = getIntent().getLongExtra("game_id", 0);
 
         pager.setAdapter(new GameFragmentPagerAdapter(getFragmentManager(), this));
         pager.setCurrentItem(mCurrentPosition);
@@ -98,7 +97,13 @@ public class GameActivity extends Activity {
             @Override
             public void onPageSelected(int position) {
                 Log.d("TTT", String.format("PAGER %d", position));
+                // When user swipes to new page, load the GameModel for this screen
                 mCurrentPosition = position;
+                GameModel game = realm
+                        .where(GameModel.class)
+                        .findAllSorted("id", Sort.ASCENDING)
+                        .get(position);
+                mGameId = game.getId();
             }
         });
     }
@@ -260,7 +265,7 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                addScore(game, playerNames, spinner.getSelectedItem().toString());
+                addScore(mGameId, playerNames, spinner.getSelectedItem().toString());
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -312,6 +317,7 @@ public class GameActivity extends Activity {
 
     // --- Helpers
 
+    @NonNull
     private ArrayList<String> splitPlayersFromScore(ScoreModel score) {
         Iterable<String> namesIterable = Splitter.on(", ")
                 .trimResults()
@@ -336,7 +342,11 @@ public class GameActivity extends Activity {
                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER));
     }
 
-    private void addScore(GameModel game, ArrayList<String> players, String winner) {
+    private void addScore(long gameId, ArrayList<String> players, String winner) {
+        GameModel game = realm
+                .where(GameModel.class)
+                .equalTo("id", gameId)
+                .findFirst();
         realm.beginTransaction();
         ScoreModel score = realm.createObject(ScoreModel.class);
         score.setId(System.currentTimeMillis());
@@ -344,7 +354,7 @@ public class GameActivity extends Activity {
         score.setPlayers(Joiner.on(", ").join(players));
         score.setGame(game);
         realm.commitTransaction();
-        scoreAdapter.loadDataAndNotifyAdapter();
+        mCurrentGameFragment.loadDataAndNotifyAdapter();
     }
 
 }

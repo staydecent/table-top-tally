@@ -4,8 +4,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.BinderThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +35,14 @@ public class GameFragment extends Fragment {
     private GameModel mGameModel;
     private int mColor;
 
+    private static ScoreAdapter scoreAdapter;
     private static Context mContext;
 
     @Bind(R.id.game_text_view)
     TextView mGameText;
+
+    @Bind(R.id.scores_recycler_view)
+    RecyclerView mScoresRecyclerView;
 
     public static GameFragment newInstance(Context context, long gameId, int color, int position, int startingPosition) {
         // the same context is used for all fragments thus does not need to be an arg
@@ -83,6 +90,10 @@ public class GameFragment extends Fragment {
         mGameText.setBackgroundColor(mColor);
         mGameText.setText(mGameModel.getName());
 
+        scoreAdapter = new ScoreAdapter(mContext, mGameModel.getId());
+        mScoresRecyclerView.setAdapter(scoreAdapter);
+        mScoresRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
         startPostponedEnterTransition();
 
         return rootView;
@@ -121,5 +132,13 @@ public class GameFragment extends Fragment {
         Rect containerBounds = new Rect();
         container.getHitRect(containerBounds);
         return view.getLocalVisibleRect(containerBounds);
+    }
+
+    /**
+     * Expose the ScoreAdapter method so the GameActivity can call it as it holds a reference to
+     * the fragment, and only the fragment holds a reference to the adapter.
+     */
+    public void loadDataAndNotifyAdapter() {
+        scoreAdapter.loadDataAndNotifyAdapter();
     }
 }
