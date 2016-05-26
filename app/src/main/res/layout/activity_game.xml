@@ -23,6 +23,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_input_add"
         android:focusableInTouchMode="true"
-        android:tint="#ffffff" />
+        android:tint="#ffffff"
+        />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -72,7 +72,6 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         isGameActivityStarted = false;
-        Log.d("TTT", "MainActivity onResume");
         slideFabIn();
     }
 
@@ -80,7 +79,6 @@ public class MainActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         if (realm != null) {
-            Log.d("TTT", "onDestroy");
             realm.close();
             realm = null;
         }

@@ -14,7 +14,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -62,11 +61,10 @@ public class GameActivity extends Activity {
     private ScoreAdapter scoreAdapter;
 
     private GameFragment mCurrentGameFragment;
+    private CoordinatorLayout.LayoutParams fabLayoutParams;
     private int mCurrentPosition;
     private int mStartingPosition;
     private boolean mIsReturning;
-
-    private int fabBottomMargin;
 
     @Bind(R.id.pager)
     ViewPager pager;
@@ -135,15 +133,7 @@ public class GameActivity extends Activity {
 
     @Override
     public void onEnterAnimationComplete() {
-        // slideFabIn
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        fabBottomMargin = layoutParams.bottomMargin;
-        fab.setTranslationY(fabBottomMargin + fab.getHeight());
-        fab.animate()
-                .translationY(0)
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(200)
-                .setStartDelay(300); // hardcoded to start after activity transition
+        slideFabIn();
     }
 
     /**
@@ -151,6 +141,7 @@ public class GameActivity extends Activity {
      */
     @Override
     public void finishAfterTransition() {
+        slideFabOut();
         mIsReturning = true;
         Intent data = new Intent();
         data.putExtra(
@@ -163,12 +154,27 @@ public class GameActivity extends Activity {
 
 
     protected void slideFabOut() {
-        CoordinatorLayout.LayoutParams fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        fab.setVisibility(View.INVISIBLE);
+//        if (fabLayoutParams == null) {
+//            fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+//        }
+//        int fabBottomMargin = fabLayoutParams.bottomMargin;
+//        fab.animate()
+//                .translationY(fabBottomMargin + fab.getHeight())
+//                .setInterpolator(new LinearInterpolator())
+//                .setDuration(200);
+    }
+
+    protected void slideFabIn() {
+        if (fabLayoutParams == null) {
+            fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        }
         int fabBottomMargin = fabLayoutParams.bottomMargin;
-        Log.d("TTT", String.format("slideFabOut %d", fabBottomMargin));
+        fab.setTranslationY(fabBottomMargin + fab.getHeight());
         fab.animate()
-                .translationY(fabBottomMargin + fab.getHeight())
+                .translationY(0)
                 .setInterpolator(new LinearInterpolator())
+                .setStartDelay(300)
                 .setDuration(200);
     }
 
@@ -178,7 +184,7 @@ public class GameActivity extends Activity {
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
             Log.d("TTT", String.format("SharedElementCallback %b", mIsReturning));
             if (mIsReturning) {
-                //slideFabOut();
+                slideFabOut();
                 RelativeLayout sharedElement = mCurrentGameFragment.getGameContainer();
                 if (sharedElement == null) {
                     // If shared element is null, then it has been scrolled off screen and
