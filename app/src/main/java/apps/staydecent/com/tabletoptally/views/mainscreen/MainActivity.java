@@ -165,8 +165,6 @@ public class MainActivity extends Activity {
                 int startingPosition = bundleReenterState.getInt(getResources().getString(R.string.extra_starting_game_position));
                 int currentPosition = bundleReenterState.getInt(getResources().getString(R.string.extra_current_game_position));
 
-                Log.d("TTT", String.format("MainActivity Callback %d %d", startingPosition, currentPosition));
-
                 if (startingPosition != currentPosition) {
                     // If startingPosition != currentPosition the user must have swiped to a
                     // different page in the DetailsActivity. We must update the shared element

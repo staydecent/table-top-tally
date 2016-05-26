@@ -10,13 +10,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -64,6 +68,9 @@ public class GameActivity extends Activity {
 
     @Bind(R.id.pager)
     ViewPager pager;
+
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
 
     @OnClick(R.id.fab)
     public void onFabClick() {
@@ -124,6 +131,21 @@ public class GameActivity extends Activity {
         outState.putInt(STATE_CURRENT_PAGE_POSITION, mCurrentPosition);
     }
 
+    @Override
+    public void onEnterAnimationComplete() {
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        int fabBottomMargin = layoutParams.bottomMargin;
+        fab.setTranslationY(fabBottomMargin + fab.getHeight());
+        fab.animate()
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(200)
+                .setStartDelay(200); // hardcoded to start after activity transition
+    }
+
+    /**
+     * Called when the back button is pressed and we are returning to MainActivity
+     */
     @Override
     public void finishAfterTransition() {
         mIsReturning = true;
