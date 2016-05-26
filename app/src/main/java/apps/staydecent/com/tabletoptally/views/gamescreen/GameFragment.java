@@ -32,11 +32,13 @@ public class GameFragment extends Fragment {
 
     private int mStartingPosition;
     private int mGamePosition;
-    private GameModel mGameModel;
     private int mColor;
+    private GameModel mGameModel;
+    private ScoreAdapter scoreAdapter;
 
-    private static ScoreAdapter scoreAdapter;
     private static Context mContext;
+
+    public Realm realm;
 
     @Bind(R.id.game_text_view)
     TextView mGameText;
@@ -70,11 +72,13 @@ public class GameFragment extends Fragment {
         mColor = getArguments().getInt(ARG_COLOR);
         long gameId = getArguments().getLong(ARG_GAME_ID);
 
-        Realm realm = Realm.getInstance(mContext);
+        realm = Realm.getInstance(mContext);
         mGameModel = realm
                 .where(GameModel.class)
                 .equalTo("id", gameId)
                 .findFirst();
+
+        scoreAdapter = new ScoreAdapter(mContext, mGameModel.getId());
     }
 
     @Override
@@ -90,9 +94,8 @@ public class GameFragment extends Fragment {
         mGameText.setBackgroundColor(mColor);
         mGameText.setText(mGameModel.getName());
 
-        scoreAdapter = new ScoreAdapter(mContext, mGameModel.getId());
-        mScoresRecyclerView.setAdapter(scoreAdapter);
         mScoresRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mScoresRecyclerView.setAdapter(scoreAdapter);
 
         startPostponedEnterTransition();
 
@@ -100,7 +103,6 @@ public class GameFragment extends Fragment {
     }
 
     private void startPostponedEnterTransition() {
-        Log.d("TTT", String.format("startPostponedEnterTransition: %d - %d [%s]", mGamePosition, mStartingPosition, mGameModel.getName()));
         if (mGamePosition == mStartingPosition) {
             mGameText.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
@@ -136,9 +138,9 @@ public class GameFragment extends Fragment {
 
     /**
      * Expose the ScoreAdapter method so the GameActivity can call it as it holds a reference to
-     * the fragment, and only the fragment holds a reference to the adapter.
+     * the fragment, and only this fragment holds a reference to the adapter.
      */
-    public void loadDataAndNotifyAdapter() {
-        scoreAdapter.loadDataAndNotifyAdapter();
+    public void updateScoresAndNotifyAdapter() {
+        scoreAdapter.updateScores(true);
     }
 }

@@ -354,7 +354,7 @@ public class GameActivity extends Activity {
         score.setPlayers(Joiner.on(", ").join(players));
         score.setGame(game);
         realm.commitTransaction();
-        mCurrentGameFragment.loadDataAndNotifyAdapter();
+        mCurrentGameFragment.updateScoresAndNotifyAdapter();
     }
 
 }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
@@ -35,14 +36,17 @@ import io.realm.Sort;
 
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
 
+    public long mGameId;
+
     private Context context;
     private ScoreHelper scoreHelper;
     private ArrayList<String> uniqueWinners; // each of these represents a Score Card
 
     public ScoreAdapter(Context c, long gameId) {
+        mGameId = gameId;
         context = c;
         scoreHelper = new ScoreHelper(gameId);
-        loadData();
+        updateScores();
     }
 
     @Override
@@ -61,22 +65,33 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     @Override
     public void onBindViewHolder(ScoreViewHolder scoreViewHolder, int position) {
         String winner = uniqueWinners.get(position);
-        scoreViewHolder.text.setText(winner);
+        scoreViewHolder.playerNameText.setText(winner);
         String total = String.format("%d/%d",
                 scoreHelper.getWinTotal(winner),
                 scoreHelper.getPlaysTotal(winner));
-        scoreViewHolder.total.setText(total);
+        scoreViewHolder.totalText.setText(total);
     }
 
-    public void loadDataAndNotifyAdapter() {
-        loadData();
-        notifyDataSetChanged();
+    public void updateScores() {
+        updateScores(false);
     }
 
-    private void loadData() {
+    public void updateScores(boolean notify) {
         scoreHelper.loadScores();
-        uniqueWinners = scoreHelper.getUniqueWinners();
+        ArrayList<String> newUniqueWinners = scoreHelper.getUniqueWinners();
+
+        if (uniqueWinners != null) {
+            uniqueWinners.clear();
+            uniqueWinners.addAll(newUniqueWinners);
+        } else {
+            uniqueWinners = newUniqueWinners;
+        }
+
+        if (notify) {
+            notifyDataSetChanged();
+        }
     }
+
 
     public class ScoreViewHolder extends RecyclerView.ViewHolder {
 
@@ -84,10 +99,10 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         CardView cardView;
 
         @Bind(R.id.score_player_name)
-        TextView text;
+        TextView playerNameText;
 
         @Bind(R.id.score_total_view)
-        TextView total;
+        TextView totalText;
 
         public ScoreViewHolder(final View view) {
             super(view);
