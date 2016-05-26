@@ -96,6 +96,7 @@ public class GameFragment extends Fragment {
 
         mScoresRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mScoresRecyclerView.setAdapter(scoreAdapter);
+        mScoresRecyclerView.setBackgroundColor(mColor);
 
         startPostponedEnterTransition();
 

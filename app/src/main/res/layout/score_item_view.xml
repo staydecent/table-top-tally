@@ -19,7 +19,6 @@
         card_view:cardPreventCornerOverlap="false"
         card_view:cardUseCompatPadding="true"
         card_view:contentPadding="18sp"
-        card_view:cardBackgroundColor="@color/colorPrimaryDark"
         >
 
         <RelativeLayout
@@ -34,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:padding="4dp"
-                style="@style/Heading.Inverted"
+                style="@style/Heading"
                 />
 
             <TextView
@@ -42,7 +41,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textColor="#fff"
                 android:layout_alignParentStart="false"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentRight="true"
