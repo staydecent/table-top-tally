@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import apps.staydecent.com.tabletoptally.R;
@@ -39,6 +40,9 @@ public class GameFragment extends Fragment {
     private static Context mContext;
 
     public Realm realm;
+
+    @Bind(R.id.game_header_container)
+    RelativeLayout mGameContainer;
 
     @Bind(R.id.game_text_view)
     TextView mGameText;
@@ -90,13 +94,14 @@ public class GameFragment extends Fragment {
                 getResources().getString(R.string.tag_name_tpl),
                 mGamePosition);
 
-        mGameText.setTransitionName(transitionName);
+        mGameContainer.setTransitionName(transitionName);
+        mGameContainer.setBackgroundColor(mColor);
+
         mGameText.setBackgroundColor(mColor);
         mGameText.setText(mGameModel.getName());
 
         mScoresRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mScoresRecyclerView.setAdapter(scoreAdapter);
-        mScoresRecyclerView.setBackgroundColor(mColor);
 
         startPostponedEnterTransition();
 
@@ -105,10 +110,10 @@ public class GameFragment extends Fragment {
 
     private void startPostponedEnterTransition() {
         if (mGamePosition == mStartingPosition) {
-            mGameText.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            mGameContainer.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    mGameText.getViewTreeObserver().removeOnPreDrawListener(this);
+                    mGameContainer.getViewTreeObserver().removeOnPreDrawListener(this);
                     getActivity().startPostponedEnterTransition();
                     return true;
                 }
@@ -121,9 +126,9 @@ public class GameFragment extends Fragment {
      * or null if the view is not visible on the screen.
      */
     @Nullable
-    public TextView getGameText() {
-        if (isViewInBounds(getActivity().getWindow().getDecorView(), mGameText)) {
-            return mGameText;
+    public RelativeLayout getGameContainer() {
+        if (isViewInBounds(getActivity().getWindow().getDecorView(), mGameContainer)) {
+            return mGameContainer;
         }
         return null;
     }
