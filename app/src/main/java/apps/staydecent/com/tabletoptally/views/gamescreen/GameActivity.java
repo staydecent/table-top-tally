@@ -135,6 +135,7 @@ public class GameActivity extends Activity {
 
     @Override
     public void onEnterAnimationComplete() {
+        // slideFabIn
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
         fabBottomMargin = layoutParams.bottomMargin;
         fab.setTranslationY(fabBottomMargin + fab.getHeight());
@@ -160,11 +161,24 @@ public class GameActivity extends Activity {
         super.finishAfterTransition();
     }
 
+
+    protected void slideFabOut() {
+        CoordinatorLayout.LayoutParams fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        int fabBottomMargin = fabLayoutParams.bottomMargin;
+        Log.d("TTT", String.format("slideFabOut %d", fabBottomMargin));
+        fab.animate()
+                .translationY(fabBottomMargin + fab.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(200);
+    }
+
+
     private final SharedElementCallback mCallback = new SharedElementCallback() {
         @Override
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
             Log.d("TTT", String.format("SharedElementCallback %b", mIsReturning));
             if (mIsReturning) {
+                //slideFabOut();
                 RelativeLayout sharedElement = mCurrentGameFragment.getGameContainer();
                 if (sharedElement == null) {
                     // If shared element is null, then it has been scrolled off screen and
