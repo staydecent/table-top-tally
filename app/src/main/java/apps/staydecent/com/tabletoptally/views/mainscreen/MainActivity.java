@@ -5,12 +5,15 @@ import android.app.SharedElementCallback;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,11 +36,16 @@ public class MainActivity extends Activity {
 
     private Realm realm;
     private RealmResults<GameModel> games;
+    private CoordinatorLayout.LayoutParams fabLayoutParams;
     private Bundle bundleReenterState;
+
     public boolean isGameActivityStarted;
 
     @Bind(R.id.games_recycler_view)
     RealmRecyclerView mRecyclerView;
+
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
 
     @OnClick(R.id.fab)
     public void onFabClick() {
@@ -65,6 +73,7 @@ public class MainActivity extends Activity {
         super.onResume();
         isGameActivityStarted = false;
         Log.d("TTT", "MainActivity onResume");
+        slideFabIn();
     }
 
     @Override
@@ -157,6 +166,24 @@ public class MainActivity extends Activity {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
+    protected void slideFabOut() {
+        if (fabLayoutParams == null) {
+            fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        }
+        int fabBottomMargin = fabLayoutParams.bottomMargin;
+        fab.animate()
+                .translationY(fabBottomMargin + fab.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(200);
+    }
+
+    protected void slideFabIn() {
+        fab.animate()
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(200);
+    }
+
     private final SharedElementCallback mCallback = new SharedElementCallback() {
 
         @Override
@@ -194,6 +221,8 @@ public class MainActivity extends Activity {
                     names.add(statusBar.getTransitionName());
                     sharedElements.put(statusBar.getTransitionName(), statusBar);
                 }
+
+                slideFabOut();
             }
         }
     };

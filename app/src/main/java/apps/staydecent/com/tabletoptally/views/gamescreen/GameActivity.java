@@ -66,6 +66,8 @@ public class GameActivity extends Activity {
     private int mStartingPosition;
     private boolean mIsReturning;
 
+    private int fabBottomMargin;
+
     @Bind(R.id.pager)
     ViewPager pager;
 
@@ -134,13 +136,13 @@ public class GameActivity extends Activity {
     @Override
     public void onEnterAnimationComplete() {
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        int fabBottomMargin = layoutParams.bottomMargin;
+        fabBottomMargin = layoutParams.bottomMargin;
         fab.setTranslationY(fabBottomMargin + fab.getHeight());
         fab.animate()
                 .translationY(0)
                 .setInterpolator(new LinearInterpolator())
                 .setDuration(200)
-                .setStartDelay(200); // hardcoded to start after activity transition
+                .setStartDelay(300); // hardcoded to start after activity transition
     }
 
     /**
@@ -161,6 +163,7 @@ public class GameActivity extends Activity {
     private final SharedElementCallback mCallback = new SharedElementCallback() {
         @Override
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            Log.d("TTT", String.format("SharedElementCallback %b", mIsReturning));
             if (mIsReturning) {
                 RelativeLayout sharedElement = mCurrentGameFragment.getGameContainer();
                 if (sharedElement == null) {
