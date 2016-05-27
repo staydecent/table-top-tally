@@ -112,6 +112,11 @@ public class GameActivity extends Activity {
                         .findAllSorted("id", Sort.ASCENDING)
                         .get(position);
                 mGameId = game.getId();
+                // If the FAB is not visible, slide it in
+                float currentY = fab.getTranslationY();
+                if (currentY > 0) {
+                    slideFabIn();
+                }
             }
         });
     }
