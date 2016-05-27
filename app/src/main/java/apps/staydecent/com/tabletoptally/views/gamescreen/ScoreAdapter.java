@@ -111,19 +111,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
                     intent.putExtra("color", mColor);
 
                     GameActivity gameActivity = (GameActivity) context;
-                    Window window = ((GameActivity) context).getWindow();
-                    View decor = window.getDecorView();
-                    View statusBar = decor.findViewById(android.R.id.statusBarBackground);
-
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            gameActivity,
-                            new Pair<View, String>(statusBar,
-                                    window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
-                            new Pair<View, String>(view.findViewById(R.id.score_player_name),
-                                    context.getResources().getString(R.string.transition_player_name))
-                    );
-
-                    gameActivity.startActivity(intent, options.toBundle());
+                    gameActivity.startActivity(intent);
                 }
             });
         }

@@ -29,12 +29,26 @@
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
+    <style name="Heading.Bold" parent="Heading">
+        <item name="android:textColor">?android:colorForeground</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <style name="Heading.Inverted" parent="Heading">
         <item name="android:fontFamily">sans-serif-bold</item>
         <item name="android:textColor">@android:color/primary_text_dark</item>
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Heading.AllCaps" parent="Heading.Inverted">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="BodyText" parent="Heading.Bold">
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

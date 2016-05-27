@@ -42,6 +42,7 @@ import java.util.Set;
 
 import apps.staydecent.com.tabletoptally.R;
 import apps.staydecent.com.tabletoptally.helpers.ColorHelper;
+import apps.staydecent.com.tabletoptally.helpers.ScoreHelper;
 import apps.staydecent.com.tabletoptally.models.GameModel;
 import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.Bind;
@@ -230,7 +231,7 @@ public class GameActivity extends Activity {
                 .findAllSorted("id", Sort.ASCENDING);
         ArrayList<String> existingNames = new ArrayList<>(0);
         for (ScoreModel score : scores) {
-            existingNames.addAll(splitPlayersFromScore(score));
+            existingNames.addAll(ScoreHelper.splitPlayersFromScore(score));
         }
         // remove duplicate names
         Set<String> namesSet = new LinkedHashSet<>(existingNames);
@@ -367,15 +368,6 @@ public class GameActivity extends Activity {
     }
 
     // --- Helpers
-
-    @NonNull
-    private ArrayList<String> splitPlayersFromScore(ScoreModel score) {
-        Iterable<String> namesIterable = Splitter.on(", ")
-                .trimResults()
-                .omitEmptyStrings()
-                .split(score.getPlayers());
-        return Lists.newArrayList(namesIterable);
-    }
 
     private void joinTextViewString(TextView tv, String str) {
         String prevStr = tv.getText().toString();

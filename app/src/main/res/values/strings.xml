@@ -26,6 +26,9 @@
 
     <string name="title_dialog_winner">Which player won?</string>
 
+    <!-- Titles -->
+    <string name="player_details_subheading_tpl">Player History for %s</string>
+
     <!-- Transitions -->
     <string name="transition_game_card">transition:GAME_CARD</string>
     <string name="transition_player_name">transition:PLAYER_NAME</string>

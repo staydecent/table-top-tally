@@ -1,6 +1,8 @@
 package apps.staydecent.com.tabletoptally.helpers;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
@@ -64,5 +66,13 @@ public class ScoreHelper {
 
     public long getPlaysTotal(String playerName) {
         return gameScores.where().contains("players", playerName).count();
+    }
+
+    public static ArrayList<String> splitPlayersFromScore(ScoreModel score) {
+        Iterable<String> namesIterable = Splitter.on(", ")
+                .trimResults()
+                .omitEmptyStrings()
+                .split(score.getPlayers());
+        return Lists.newArrayList(namesIterable);
     }
 }

@@ -4,55 +4,56 @@
     android:id="@+id/player_details_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:transitionGroup="true"
+    android:layout_marginTop="18sp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/game_text_view"
-        android:layout_width="fill_parent"
+    <ImageButton
+        style="?android:attr/borderlessButtonStyle"
+        android:contentDescription="@android:string/cancel"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:gravity="center_vertical|center_horizontal"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="18dp"
-        style="@style/Heading.Inverted"
-        android:background="@drawable/solid_color_shape"
-        android:textColor="@color/text_state_list"
-        android:text="This is some text"
-        android:height="100sp" />
+        android:layout_width="wrap_content"
+        android:onClick="cancelActivity" />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="4dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="33dp">
 
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/score_list_item"
-            android:transitionName="@string/transition_player_name"
-            android:layout_gravity="center"
+        <TextView
+            android:id="@+id/player_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="0sp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            card_view:cardCornerRadius="0sp"
-            card_view:cardElevation="0sp"
-            card_view:cardPreventCornerOverlap="false"
-            card_view:cardUseCompatPadding="true"
-            card_view:contentPadding="18sp"
-            >
+            android:text="Player Name"
+            style="@style/Heading.Bold"
+            />
 
-            <TextView
-                android:id="@+id/player_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:padding="4dp"
-                style="@style/Heading"
-                />
+        <TextView
+            android:id="@+id/game_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/player_text_view"
+            android:layout_marginTop="8dp"
+            style="@style/Heading.AllCaps"
+            android:text="This is some text"
+            />
 
-        </android.support.v7.widget.CardView>
+        <co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/player_scores_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="44dp"
+            android:layout_below="@+id/game_text_view"
+            app:rrvLayoutType="LinearLayout"
+            app:rrvSwipeToDelete="false"
+            />
 
-    </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>
 
