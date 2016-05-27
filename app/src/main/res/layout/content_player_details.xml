@@ -11,12 +11,13 @@
         style="?android:attr/borderlessButtonStyle"
         android:contentDescription="@android:string/cancel"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:id="@+id/player_close_button"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
         android:gravity="center_vertical|center_horizontal"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:onClick="cancelActivity" />
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"

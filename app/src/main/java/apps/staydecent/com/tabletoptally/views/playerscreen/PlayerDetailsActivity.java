@@ -9,6 +9,7 @@ import apps.staydecent.com.tabletoptally.models.GameModel;
 import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -29,6 +30,11 @@ public class PlayerDetailsActivity extends Activity {
 
     @Bind(R.id.player_scores_recycler_view)
     RealmRecyclerView playerScoresRecyclerView;
+
+    @OnClick(R.id.player_close_button)
+    public void onCloseClick() {
+        finishAfterTransition();
+    }
 
 
     @Override
