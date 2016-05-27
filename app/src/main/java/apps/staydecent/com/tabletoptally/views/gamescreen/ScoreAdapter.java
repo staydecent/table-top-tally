@@ -111,6 +111,10 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
                     intent.putExtra("color", mColor);
 
                     GameActivity gameActivity = (GameActivity) context;
+                    if (!gameActivity.isPlayerDetailsActivityStarted) {
+                        gameActivity.isPlayerDetailsActivityStarted = true;
+                    }
+
                     gameActivity.startActivity(intent);
                 }
             });

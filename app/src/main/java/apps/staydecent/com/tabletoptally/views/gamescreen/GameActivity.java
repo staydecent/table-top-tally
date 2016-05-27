@@ -30,9 +30,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -65,7 +63,9 @@ public class GameActivity extends Activity {
     private CoordinatorLayout.LayoutParams fabLayoutParams;
     private int mCurrentPosition;
     private int mStartingPosition;
-    private boolean mIsReturning;
+    private boolean mIsExiting;
+
+    public boolean isPlayerDetailsActivityStarted = false;
 
     @Bind(R.id.pager)
     ViewPager pager;
@@ -139,7 +139,10 @@ public class GameActivity extends Activity {
 
     @Override
     public void onEnterAnimationComplete() {
-        slideFabIn();
+        boolean shouldSlideFabIn = !isPlayerDetailsActivityStarted;
+        if (shouldSlideFabIn) {
+            slideFabIn();
+        }
     }
 
     /**
@@ -148,7 +151,7 @@ public class GameActivity extends Activity {
     @Override
     public void finishAfterTransition() {
         slideFabOut();
-        mIsReturning = true;
+        mIsExiting = true;
         Intent data = new Intent();
         data.putExtra(
                 getResources().getString(R.string.extra_starting_game_position), mStartingPosition);
@@ -188,8 +191,8 @@ public class GameActivity extends Activity {
     private final SharedElementCallback mCallback = new SharedElementCallback() {
         @Override
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-            Log.d("TTT", String.format("SharedElementCallback %b", mIsReturning));
-            if (mIsReturning) {
+            Log.d("TTT", String.format("SharedElementCallback %b", mIsExiting));
+            if (mIsExiting) {
                 slideFabOut();
                 RelativeLayout sharedElement = mCurrentGameFragment.getGameContainer();
                 if (sharedElement == null) {
