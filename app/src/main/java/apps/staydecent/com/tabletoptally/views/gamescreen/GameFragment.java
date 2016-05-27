@@ -76,7 +76,7 @@ public class GameFragment extends Fragment {
         mColor = getArguments().getInt(ARG_COLOR);
         long gameId = getArguments().getLong(ARG_GAME_ID);
 
-        realm = Realm.getInstance(mContext);
+        realm = Realm.getDefaultInstance();
         mGameModel = realm
                 .where(GameModel.class)
                 .equalTo("id", gameId)

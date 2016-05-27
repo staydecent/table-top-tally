@@ -4,7 +4,6 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -25,6 +24,7 @@ import io.realm.Realm;
 import io.realm.RealmBasedRecyclerViewAdapter;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
+import io.realm.Sort;
 
 public class GameRealmAdapter
         extends RealmBasedRecyclerViewAdapter<GameModel, GameRealmAdapter.ViewHolder> {
@@ -78,27 +78,40 @@ public class GameRealmAdapter
     }
 
     private void asyncRemoveGame(final long id) {
-        AsyncTask<Void, Void, Void> remoteItem = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                Realm instance = Realm.getInstance(context);
-                GameModel game =
-                        instance.where(GameModel.class).equalTo("id", id).findFirst();
-
-                if (game != null) {
-                    RealmResults<ScoreModel> scores =
-                        instance.where(ScoreModel.class).equalTo("game.id", game.getId()).findAll();
-                    instance.beginTransaction();
-                    scores.clear();
-                    game.removeFromRealm();
-                    instance.commitTransaction();
+        final GameRealmAdapter gameRealmAdapter = this;
+        Realm realm = null;
+        try {
+            realm = Realm.getDefaultInstance();
+            realm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm bgRealm) {
+                    GameModel game =
+                            bgRealm.where(GameModel.class).equalTo("id", id).findFirst();
+                    if (game != null) {
+                        RealmResults<ScoreModel> scores =
+                                bgRealm.where(ScoreModel.class).equalTo("game.id", game.getId()).findAll();
+                        scores.deleteAllFromRealm();
+                        game.deleteFromRealm();
+                    }
                 }
-
-                instance.close();
-                return null;
+            }, new Realm.Transaction.OnSuccess() {
+                @Override
+                public void onSuccess() {
+                    // Our sharedElement transitions and click events get mixed up after removing
+                    // a game from this adapter. For now, let's just reload the whole set.
+                    // @TODO: Avoid reloading the whole RealmResults reference if we can
+                    Realm realm = Realm.getDefaultInstance();
+                    RealmResults<GameModel> games = realm
+                            .where(GameModel.class)
+                            .findAllSorted("id", Sort.ASCENDING);
+                    gameRealmAdapter.updateRealmResults(games);
+                }
+            });
+        } finally {
+            if (realm != null) {
+                realm.close();
             }
-        };
-        remoteItem.execute();
+        }
     }
 
     public class ViewHolder extends RealmViewHolder {
