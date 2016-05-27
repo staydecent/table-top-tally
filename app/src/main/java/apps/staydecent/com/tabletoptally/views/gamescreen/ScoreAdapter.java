@@ -13,37 +13,26 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Ordering;
-import com.google.common.primitives.Ints;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import apps.staydecent.com.tabletoptally.helpers.ScoreHelper;
 import apps.staydecent.com.tabletoptally.views.playerscreen.PlayerDetailsActivity;
 import apps.staydecent.com.tabletoptally.R;
-import apps.staydecent.com.tabletoptally.models.ScoreModel;
 import butterknife.ButterKnife;
 import butterknife.Bind;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
 
     public long mGameId;
+    public int mColor;
 
     private Context context;
     private ScoreHelper scoreHelper;
     private ArrayList<String> uniqueWinners; // each of these represents a Score Card
 
-    public ScoreAdapter(Context c, long gameId) {
+    public ScoreAdapter(Context c, long gameId, int color) {
         mGameId = gameId;
+        mColor = color;
         context = c;
         scoreHelper = new ScoreHelper(gameId);
         updateScores();
@@ -113,10 +102,13 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String playerName = uniqueWinners.get(vh.getAdapterPosition());
-                    Log.d("TTT", String.format("HIYA %s", playerName));
+                    int position = vh.getAdapterPosition();
+                    String playerName = uniqueWinners.get(position);
+
                     Intent intent = new Intent(context, PlayerDetailsActivity.class);
                     intent.putExtra("playerName", playerName);
+                    intent.putExtra("gameId", mGameId);
+                    intent.putExtra("color", mColor);
 
                     GameActivity gameActivity = (GameActivity) context;
                     Window window = ((GameActivity) context).getWindow();

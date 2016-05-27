@@ -82,7 +82,7 @@ public class GameFragment extends Fragment {
                 .equalTo("id", gameId)
                 .findFirst();
 
-        scoreAdapter = new ScoreAdapter(mContext, mGameModel.getId());
+        scoreAdapter = new ScoreAdapter(mContext, mGameModel.getId(), mColor);
     }
 
     @Override
